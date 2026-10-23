@@ -1377,19 +1377,22 @@
 
   <script>
     (function() {
-      const DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbybiCtU66T4LDJin1zAkt9ie9mEoU4IMgM-Z839occrAocptze4WOkigu21hvkgqegL/exec';
+      // IMPORTANT: Never default to Milo's 4-part Web App URL for syncing questions!
+      const MILO_FOUR_PART_WEBAPP_ID = 'AKfycbybiCtU66T4LDJin1zAkt9ie9mEoU4IMgM-Z839occrAocptze4WOkigu21hvkgqegL';
+      const DEFAULT_WEBAPP_URL = '';
+      const FALLBACK_STATELESS_AI_URL = 'https://script.google.com/macros/s/AKfycbybiCtU66T4LDJin1zAkt9ie9mEoU4IMgM-Z839occrAocptze4WOkigu21hvkgqegL/exec';
       const DEFAULT_GCP_PROJECT = 'milo-writing-crafter';
 
       const STORAGE_KEYS = {
-        EMERALDS: 'ollie_isa_emeralds_v1_fresh',
-        CURRENT_LEVEL_IDX: 'ollie_isa_current_level_idx_v1_fresh',
-        WEBAPP_URL: 'ollie_isa_webapp_url_v1',
-        GCP_PROJECT: 'ollie_isa_gcp_project_v1',
-        GCP_LOCATION: 'ollie_isa_gcp_location_v1',
-        GEMINI_KEY: 'ollie_isa_gemini_key_v1',
-        PARENT_LOGS: 'ollie_isa_parent_logs_v1_fresh',
-        WARMUP_DONE: 'ollie_isa_warmup_done_v1',
-        SOUND_MUTED: 'ollie_isa_sound_muted_v1'
+        EMERALDS: 'ollie_isa_emeralds_v2_2part',
+        CURRENT_LEVEL_IDX: 'ollie_isa_current_level_idx_v2_2part',
+        WEBAPP_URL: 'ollie_isa_webapp_url_v2_2part',
+        GCP_PROJECT: 'ollie_isa_gcp_project_v2_2part',
+        GCP_LOCATION: 'ollie_isa_gcp_location_v2_2part',
+        GEMINI_KEY: 'ollie_isa_gemini_key_v2_2part',
+        PARENT_LOGS: 'ollie_isa_parent_logs_v2_2part',
+        WARMUP_DONE: 'ollie_isa_warmup_done_v2_2part',
+        SOUND_MUTED: 'ollie_isa_sound_muted_v2_2part'
       };
 
       const memoryStorageFallback = {};
@@ -1512,7 +1515,25 @@
           { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'E' }
         ],
 
+        getOllieWebAppUrl() {
+          const saved = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL).trim();
+          if (saved && saved.includes(MILO_FOUR_PART_WEBAPP_ID)) {
+            safeSetStorage(STORAGE_KEYS.WEBAPP_URL, '');
+            return '';
+          }
+          return saved;
+        },
+
+        isValidOllieTwoPartBank(bankData) {
+          if (!bankData || !Array.isArray(bankData.missions) || bankData.missions.length === 0) return false;
+          if (bankData.child && String(bankData.child).toLowerCase() !== 'ollie') return false;
+          return true;
+        },
+
         init() {
+          try {
+            window.localStorage.removeItem('ollie_isa_webapp_url_v1');
+          } catch (e) {}
           this.emeralds = parseInt(safeGetStorage(STORAGE_KEYS.EMERALDS, '20'), 10);
           this.updateEmeraldHud();
 
@@ -2014,21 +2035,31 @@
         },
 
         getStepsArray(mission) {
-          const list = mission.steps || mission.socraticSteps || mission.workshopMilestones || [];
+          const rawList = mission.steps || mission.socraticSteps || mission.workshopMilestones || [];
+          // Strictly enforce 2 parts (Part 1 of 2 & Part 2 of 2) for Ollie's game
+          const list = rawList.slice(0, 2);
           if (list.length > 0) {
             return list.map((s, idx) => ({
-              shortLabel: `Part ${idx + 1}`,
+              shortLabel: `Part ${idx + 1} of ${list.length}`,
               question: s.coachQuestion || s.goal || mission.promptScenario,
               hint: s.hint || '',
               minWords: s.minStepWords || s.minParagraphWords || 10
             }));
           }
-          return [{
-            shortLabel: 'Full Piece',
-            question: mission.promptScenario,
-            hint: '',
-            minWords: mission.minWords || 120
-          }];
+          return [
+            {
+              shortLabel: 'Part 1 of 2',
+              question: `👉 Part 1 of 2: ${mission.promptScenario}`,
+              hint: 'Write 1 or 2 sentences to start your piece!',
+              minWords: 10
+            },
+            {
+              shortLabel: 'Part 2 of 2',
+              question: '👉 Part 2 of 2: How does your story or opinion finish?',
+              hint: 'Write 1 or 2 concluding sentences!',
+              minWords: 10
+            }
+          ];
         },
 
         renderStepsBar() {
@@ -2588,7 +2619,7 @@
           existing.unshift(entry);
           safeSetStorage(STORAGE_KEYS.PARENT_LOGS, JSON.stringify(existing.slice(0, 50)));
 
-          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const webAppUrl = this.getOllieWebAppUrl();
           if (webAppUrl) {
             fetch(webAppUrl, {
               method: 'POST',
@@ -2603,7 +2634,7 @@
          * Uses JSONP fallback on iPad Safari if POST redirect is blocked by WebKit!
          */
         async fetchLiveCoachTurn(studentText, stepObj, nextStepObj) {
-          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const webAppUrl = this.getOllieWebAppUrl() || FALLBACK_STATELESS_AI_URL;
           const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
           if (!webAppUrl) return null;
 
@@ -2643,7 +2674,7 @@
         },
 
         async fetchLiveContextualHint(studentText, currentQuestion) {
-          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const webAppUrl = this.getOllieWebAppUrl() || FALLBACK_STATELESS_AI_URL;
           const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
           if (!webAppUrl) return null;
 
@@ -2706,12 +2737,12 @@
         },
 
         syncCloudMissions(manual = false) {
-          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL).trim();
+          const webAppUrl = this.getOllieWebAppUrl();
           if (!webAppUrl) {
-            if (manual) this.showToast('⚠️ Tap ☁️ first to paste your Apps Script Web App URL!');
+            if (manual) this.showToast('ℹ️ Using built-in 2-part levels! Paste Ollie\'s Web App URL in ☁️ to sync custom Drive levels.');
             return;
           }
-          if (manual) this.showToast('🔄 Syncing latest questions from Google Drive...');
+          if (manual) this.showToast('🔄 Syncing Ollie\'s 2-part questions from Google Drive...');
           const sep = webAppUrl.includes('?') ? '&' : '?';
           const url = `${webAppUrl}${sep}child=ollie&t=${Date.now()}`;
 
@@ -2719,9 +2750,13 @@
             .then(r => r.json())
             .then(res => {
               if (res && res.status === 'ok' && res.data && res.data.missions) {
+                if (!this.isValidOllieTwoPartBank(res.data)) {
+                  if (manual) this.showToast('⚠️ That Web App URL belongs to Milo\'s 4-part game! Keeping Ollie\'s 2-part levels.');
+                  return;
+                }
                 this.data = res.data;
                 this.loadMissions(res.data.missions);
-                this.showToast('☁️ Loaded latest questions from Google Drive!');
+                this.showToast('☁️ Loaded Ollie\'s 2-part questions from Google Drive!');
               } else {
                 this.syncViaJsonp(webAppUrl, manual);
               }
@@ -2740,9 +2775,13 @@
             delete window[cbName];
             script.remove();
             if (res && res.status === 'ok' && res.data && res.data.missions) {
+              if (!this.isValidOllieTwoPartBank(res.data)) {
+                if (manual) this.showToast('⚠️ That Web App URL belongs to Milo\'s 4-part game! Keeping Ollie\'s 2-part levels.');
+                return;
+              }
               this.data = res.data;
               this.loadMissions(res.data.missions);
-              this.showToast('☁️ Loaded latest questions from Google Drive!');
+              this.showToast('☁️ Loaded Ollie\'s 2-part questions from Google Drive!');
             } else if (manual) {
               this.showToast('⚠️ Connected to script, but no questions file found.');
             }
@@ -2807,7 +2846,7 @@
         },
 
         openSettingsModal() {
-          document.getElementById('input-webapp-url').value = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          document.getElementById('input-webapp-url').value = this.getOllieWebAppUrl();
           document.getElementById('input-gcp-project').value = (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT);
           document.getElementById('input-gcp-location').value = safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1');
           document.getElementById('input-gemini-key').value = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
@@ -2820,7 +2859,12 @@
         },
 
         saveCloudSettings() {
-          const url = document.getElementById('input-webapp-url').value.trim();
+          const rawUrl = document.getElementById('input-webapp-url').value.trim();
+          if (rawUrl.includes(MILO_FOUR_PART_WEBAPP_ID)) {
+            this.showToast('⚠️ That URL is Milo\'s 4-part backend! Please paste Ollie\'s Web App URL instead.');
+            return;
+          }
+          const url = rawUrl;
           const proj = document.getElementById('input-gcp-project').value.trim();
           const loc = document.getElementById('input-gcp-location').value.trim() || 'us-central1';
           const key = document.getElementById('input-gemini-key').value.trim();
@@ -2873,7 +2917,7 @@
           document.getElementById('level-select').value = 0;
           if (this.missions[0]) this.selectMission(this.missions[0]);
           this.renderParentLogsTable();
-          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const webAppUrl = this.getOllieWebAppUrl();
           if (webAppUrl) {
             fetch(webAppUrl, {
               method: 'POST',
