@@ -1,0 +1,2926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Ollie's Writing Crafter</title>
+  <style>
+    :root {
+      --bg-page: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-soft: #f8fafc;
+      --bg-coach: #eff6ff;
+      --border-light: #cbd5e1;
+      --border-strong: #94a3b8;
+      --border-focus: #16a34a;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --emerald-main: #16a34a;
+      --emerald-dark: #15803d;
+      --emerald-bg: #dcfce7;
+      --gold-main: #d97706;
+      --gold-bg: #fef3c7;
+      --blue-main: #2563eb;
+      --blue-bg: #dbeafe;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      padding: env(safe-area-inset-top, 8px) 14px env(safe-area-inset-bottom, 20px) 14px;
+      line-height: 1.5;
+    }
+
+    .app-shell {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* COMPACT SINGLE-LINE TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: 10px;
+      padding: 6px 12px;
+      margin-bottom: 10px;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .brand-compact {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    .level-select {
+      background: var(--bg-soft);
+      color: var(--text-primary);
+      border: 1.5px solid var(--border-light);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      max-width: 340px;
+      width: 100%;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .stat-pill.emerald {
+      background: var(--emerald-bg);
+      color: var(--emerald-dark);
+    }
+
+    .stat-pill.wpm {
+      background: var(--blue-bg);
+      color: #1d4ed8;
+    }
+
+    .btn-parent {
+      background: var(--bg-soft);
+      color: var(--text-secondary);
+      border: 1.5px solid var(--border-light);
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* SINGLE UNIFIED COACH BUBBLE */
+    .coach-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--bg-coach);
+      border: 2px solid #93c5fd;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .coach-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 2px solid var(--blue-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.55rem;
+      flex-shrink: 0;
+    }
+
+    .coach-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .coach-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .coach-name {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #1e40af;
+    }
+
+    /* PERSISTENT PREVIOUS-STEP PRAISE BANNER (SO FEEDBACK NEVER DISAPPEARS TOO FAST) */
+    .last-step-feedback {
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      color: #14532d;
+      padding: 8px 11px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .last-step-feedback.visible {
+      display: block;
+    }
+
+    .coach-question {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: pre-line;
+    }
+
+    .coach-tip {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.88);
+      padding: 7px 11px;
+      border-left: 3px solid var(--blue-main);
+      border-radius: 6px;
+      display: none;
+    }
+
+    .coach-tip.visible {
+      display: block;
+    }
+
+    .move-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .move-badge.brilliant {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #38bdf8;
+    }
+
+    .move-badge.great {
+      background: var(--emerald-bg);
+      color: var(--emerald-dark);
+      border: 1px solid #4ade80;
+    }
+
+    .move-badge.inaccuracy {
+      background: var(--gold-bg);
+      color: #b45309;
+      border: 1px solid #fbbf24;
+    }
+
+    /* TWO-HAND TYPING WARM-UP CARD (MINIMALIST BIG-LETTER DISPLAY) */
+    .warmup-card {
+      background: var(--bg-card);
+      border: 2.5px solid var(--blue-main);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .warmup-card.visible {
+      display: block;
+    }
+
+    .writing-card.locked-by-warmup {
+      display: none;
+    }
+
+    .warmup-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .warmup-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .warmup-round-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: var(--blue-bg);
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+
+    .warmup-round-badge.round-two {
+      background: var(--emerald-bg);
+      color: var(--emerald-dark);
+      border-color: #86efac;
+    }
+
+    .warmup-progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .warmup-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #16a34a);
+      border-radius: 999px;
+      transition: width 0.2s ease;
+    }
+
+    .warmup-instruction {
+      background: #eff6ff;
+      border: 1.5px solid #93c5fd;
+      color: #1e3a8a;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 14px;
+      transition: all 0.15s ease;
+    }
+
+    .warmup-instruction.warn {
+      background: var(--gold-bg);
+      border-color: #fbbf24;
+      color: #92400e;
+    }
+
+    .warmup-instruction.success {
+      background: var(--emerald-bg);
+      border-color: #4ade80;
+      color: #14532d;
+    }
+
+    .warmup-arena {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .warmup-arena {
+        grid-template-columns: 1fr;
+      }
+      .warmup-divider {
+        display: none;
+      }
+    }
+
+    .warmup-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    .hand-card {
+      background: var(--bg-soft);
+      border: 2.5px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 16px 14px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .hand-card.anchor-waiting {
+      border-style: dashed;
+      border-color: #64748b;
+    }
+
+    .hand-card.anchor-active {
+      background: #dcfce7;
+      border-style: solid;
+      border-color: #16a34a;
+      box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.16);
+    }
+
+    .hand-card.target-waiting {
+      opacity: 0.78;
+    }
+
+    .hand-card.target-ready {
+      opacity: 1;
+      background: #eff6ff;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+    }
+
+    .hand-label {
+      font-size: 0.84rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .hand-role-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      background: #e2e8f0;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .hand-card.anchor-active .hand-role-pill {
+      background: #16a34a;
+      color: #ffffff;
+    }
+
+    .hand-card.target-ready .hand-role-pill {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .big-key-cap {
+      width: 112px;
+      height: 112px;
+      margin: 6px auto 10px auto;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 3px solid #475569;
+      border-bottom-width: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.1rem;
+      font-weight: 900;
+      color: #0f172a;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+      transition: all 0.1s ease;
+    }
+
+    .hand-card.anchor-active .big-key-cap {
+      background: #16a34a;
+      color: #ffffff;
+      border-color: #15803d;
+      border-bottom-width: 3px;
+      transform: translateY(5px);
+    }
+
+    .hand-card.target-ready .big-key-cap {
+      border-color: #2563eb;
+      color: #1d4ed8;
+    }
+
+    .hand-card.pop-hit .big-key-cap {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #1e40af;
+      transform: scale(1.12);
+    }
+
+    @keyframes warmupShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .hand-card.shake-warn {
+      animation: warmupShake 0.28s ease;
+      border-color: #d97706;
+      background: #fef3c7;
+    }
+
+    .hand-status-sub {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-height: 1.4em;
+    }
+
+    .warmup-seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .seq-key-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      border: 1.5px solid var(--border-light);
+      background: var(--bg-soft);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seq-key-dot.done {
+      background: var(--emerald-bg);
+      border-color: var(--emerald-main);
+      color: var(--emerald-dark);
+    }
+
+    .seq-key-dot.current {
+      background: var(--blue-bg);
+      border-color: var(--blue-main);
+      color: #1e40af;
+      transform: scale(1.1);
+      font-weight: 900;
+    }
+
+    /* MAIN WRITING CARD */
+    .writing-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .steps-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .steps-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .step-pill {
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1.5px solid var(--border-light);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .step-pill.active {
+      background: var(--blue-bg);
+      border-color: var(--blue-main);
+      color: #1e40af;
+    }
+
+    .step-pill.done {
+      background: var(--emerald-bg);
+      border-color: var(--emerald-main);
+      color: var(--emerald-dark);
+    }
+
+    /* SPACIOUS HIGH-CONTRAST WHITE ANSWER BOX */
+    .writing-textarea {
+      width: 100%;
+      min-height: 250px;
+      background: #ffffff;
+      color: #0f172a;
+      border: 2.5px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: var(--font-sans);
+      font-size: 1.18rem;
+      line-height: 1.65;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .writing-textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+    }
+
+    .writing-textarea::placeholder {
+      color: #94a3b8;
+    }
+
+    .bottom-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .word-counter {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--emerald-main);
+      color: #ffffff;
+      border: none;
+      border-bottom: 3px solid var(--emerald-dark);
+      border-radius: 9px;
+      padding: 10px 18px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #15803d;
+    }
+
+    .btn-light {
+      background: var(--bg-soft);
+      color: var(--text-primary);
+      border: 1.5px solid var(--border-light);
+      border-radius: 9px;
+      padding: 8px 13px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-light:hover {
+      border-color: var(--border-strong);
+    }
+
+    /* COMPILED WRITING PREVIEW */
+    .story-preview-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-light);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .compiled-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 11px 14px;
+      margin-top: 8px;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .compiled-part {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-light);
+    }
+
+    .compiled-part:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    /* POST-SESSION WRITING CHECK PANEL */
+    .review-card {
+      background: var(--bg-card);
+      border: 2.5px solid var(--gold-main);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .review-card.visible {
+      display: block;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .review-stat-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .review-stat-num {
+      font-size: 1.35rem;
+      font-weight: 900;
+    }
+
+    .sentence-item {
+      background: var(--bg-soft);
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 9px 12px;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    .retry-box {
+      background: var(--gold-bg);
+      border: 2px solid var(--gold-main);
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    /* PARENT MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 2px solid var(--border-light);
+      border-radius: 14px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+      color: var(--text-secondary);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 11px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .parent-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .parent-table th, .parent-table td {
+      border: 1px solid var(--border-light);
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .parent-table th {
+      background: var(--bg-soft);
+    }
+
+    .toast-box {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      z-index: 1200;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: all 0.2s;
+    }
+
+    .toast-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- ULTRA-COMPACT SINGLE-LINE TOP BAR -->
+    <header class="top-bar">
+      <div class="top-left">
+        <span class="brand-compact">✏️ Ollie's Writing</span>
+        <select id="level-select" class="level-select" aria-label="Choose Level"></select>
+      </div>
+
+      <div class="top-right">
+        <div class="stat-pill wpm" title="Typing Speed">
+          ⌨️ <span id="hud-wpm">0</span> WPM
+        </div>
+        <div class="stat-pill emerald" title="Emeralds">
+          💎 <span id="hud-emeralds">20</span>
+        </div>
+        <button class="btn-parent" id="btn-open-warmup" title="Two-Hand Typing Warm-Up (+5 Emeralds)" onclick="window.GameEngine.startWarmup(true)">✋ Warm-Up</button>
+        <button class="btn-parent" id="btn-sync-cloud" title="Sync Latest Questions from Cloud" onclick="window.GameEngine.syncCloudMissions(true)">🔄</button>
+        <button class="btn-parent" id="btn-open-settings" title="Parent Settings">☁️</button>
+      </div>
+    </header>
+
+    <!-- SINGLE UNIFIED COACH BUBBLE -->
+    <section class="coach-card" aria-label="Writing Coach">
+      <div class="coach-avatar" id="coach-avatar">🦉</div>
+      <div class="coach-body">
+        <div class="coach-top-row">
+          <span class="coach-name" id="coach-name">Coach Alex</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span id="coach-move-badge" class="move-badge great">⭐ Let's Write</span>
+            <button class="btn-light" style="padding:3px 9px;font-size:0.76rem;" onclick="window.GameEngine.speakCoachPrompt()">🔊 Read</button>
+          </div>
+        </div>
+        <!-- Persistent banner showing Coach's comment on Milo's previous step so it NEVER vanishes too quickly -->
+        <div class="last-step-feedback" id="last-step-feedback"></div>
+        <div class="coach-question" id="coach-message"></div>
+        <div class="coach-tip" id="coach-hint"></div>
+      </div>
+    </section>
+
+    <!-- TWO-HAND TYPING WARM-UP CARD (MINIMALIST BIG-LETTER DISPLAY) -->
+    <section class="warmup-card" id="typing-warmup-card" aria-label="Two-Hand Typing Warm-Up">
+      <div class="warmup-top-bar">
+        <div class="warmup-title-group">
+          <strong style="font-size:1rem;">⚡ Two-Hand Finger Warm-Up (+5 💎)</strong>
+          <span class="warmup-round-badge" id="warmup-round-badge">Round 1 of 2 • Right-Hand Tap</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:0.84rem;font-weight:800;color:var(--text-secondary);">
+            Tap <strong id="warmup-tap-count">0</strong> / 20
+          </span>
+          <button class="btn-light" id="btn-warmup-sound" style="padding:4px 9px;font-size:0.78rem;" onclick="window.GameEngine.toggleWarmupSound()">
+            🔊 Sound On
+          </button>
+          <button class="btn-light" id="btn-warmup-skip" style="padding:4px 9px;font-size:0.78rem;color:var(--text-muted);" onclick="window.GameEngine.skipWarmup()">
+            Skip ➔
+          </button>
+        </div>
+      </div>
+
+      <div class="warmup-progress-track" aria-hidden="true">
+        <div class="warmup-progress-fill" id="warmup-progress-fill"></div>
+      </div>
+
+      <div class="warmup-instruction" id="warmup-instruction">
+        ✋ Hold down [ F ] with your LEFT hand, then tap [ J ] with your RIGHT hand!
+      </div>
+
+      <div class="warmup-arena">
+        <!-- LEFT HAND CARD (Always on the left side of the screen) -->
+        <div class="hand-card anchor-waiting" id="warmup-left-card" onclick="window.GameEngine.handleWarmupCardClick('left')" role="button" tabindex="0" aria-label="Left Hand Key Card">
+          <div>
+            <div class="hand-label">✋ Left Hand</div>
+            <span class="hand-role-pill" id="warmup-left-role">HOLD DOWN ANCHOR</span>
+          </div>
+          <div class="big-key-cap" id="warmup-left-key">F</div>
+          <div class="hand-status-sub" id="warmup-left-status">Press &amp; hold [ F ] on keyboard</div>
+        </div>
+
+        <div class="warmup-divider" aria-hidden="true">⇄</div>
+
+        <!-- RIGHT HAND CARD (Always on the right side of the screen) -->
+        <div class="hand-card target-waiting" id="warmup-right-card" onclick="window.GameEngine.handleWarmupCardClick('right')" role="button" tabindex="0" aria-label="Right Hand Key Card">
+          <div>
+            <div class="hand-label">🤚 Right Hand</div>
+            <span class="hand-role-pill" id="warmup-right-role">TAP TARGET KEY</span>
+          </div>
+          <div class="big-key-cap" id="warmup-right-key">J</div>
+          <div class="hand-status-sub" id="warmup-right-status">Hold [ F ] first, then tap [ J ]</div>
+        </div>
+      </div>
+
+      <div class="warmup-seq-row" id="warmup-seq-row" aria-label="Round Key Sequence"></div>
+    </section>
+
+    <!-- MAIN WRITING CARD -->
+    <main class="writing-card" id="main-writing-card">
+      <div class="steps-toolbar" id="steps-toolbar">
+        <div class="steps-row" id="steps-bar"></div>
+        <div class="word-counter">
+          Words: <strong id="step-word-count">0</strong> / <span id="step-word-goal">10</span>+
+          <span style="color:var(--text-muted);margin-left:6px;">(Total: <strong id="total-word-count">0</strong>)</span>
+        </div>
+      </div>
+
+      <textarea
+        id="writing-input"
+        class="writing-textarea"
+        spellcheck="false"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        placeholder="Type here, Ollie..."
+      ></textarea>
+
+      <div class="bottom-controls-row">
+        <div class="button-bar">
+          <button class="btn-primary" id="btn-submit-step" onclick="window.GameEngine.submitCurrentStep()">
+            ✅ Next Part
+          </button>
+          <button class="btn-light" id="btn-hint" onclick="window.GameEngine.askHint()">
+            💡 Hint
+          </button>
+          <button class="btn-light" onclick="window.GameEngine.runGameReview()">
+            🏁 Finish & Check
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- POST-SESSION WRITING CHECK -->
+    <section class="review-card" id="review-panel">
+      <div class="preview-header" style="margin-bottom:8px;">
+        <strong style="font-size:1.02rem;">🌟 Coach's Writing Check</strong>
+        <button class="btn-light" style="padding:4px 10px;font-size:0.8rem;" onclick="window.GameEngine.advanceToNextLevel()">
+          ➡️ Next Level
+        </button>
+      </div>
+
+      <p id="review-coach-summary" style="font-size:0.92rem;color:var(--text-secondary);margin-bottom:8px;"></p>
+
+      <div class="review-grid">
+        <div class="review-stat-box">
+          <div class="review-stat-num" style="color:#0284c7;" id="rev-brilliant-count">0</div>
+          <div style="font-size:0.78rem;font-weight:800;">💎 Brilliant!!</div>
+        </div>
+        <div class="review-stat-box">
+          <div class="review-stat-num" style="color:#16a34a;" id="rev-great-count">0</div>
+          <div style="font-size:0.78rem;font-weight:800;">⭐ Great!</div>
+        </div>
+        <div class="review-stat-box">
+          <div class="review-stat-num" style="color:#d97706;" id="rev-inaccuracy-count">0</div>
+          <div style="font-size:0.78rem;font-weight:800;">🔧 Quick Fix</div>
+        </div>
+      </div>
+
+      <div id="sentence-review-list"></div>
+
+      <div class="retry-box" id="retry-challenge-box">
+        <div style="font-weight:800;color:#92400e;margin-bottom:4px;font-size:0.94rem;">
+          🎯 Quick Fix Bonus (+10 💎)
+        </div>
+        <div id="retry-prompt-text" style="font-size:0.9rem;color:var(--text-primary);margin-bottom:8px;"></div>
+        <textarea
+          id="retry-input"
+          class="writing-textarea"
+          style="min-height:85px;margin-bottom:8px;"
+          spellcheck="false"
+          autocorrect="off"
+          placeholder="Type your improved sentence here..."
+        ></textarea>
+        <div class="button-bar">
+          <button class="btn-primary" onclick="window.GameEngine.submitRetryChallenge()">
+            🔓 Claim +10 💎
+          </button>
+          <button class="btn-light" onclick="window.GameEngine.advanceToNextLevel()">
+            ➡️ Next Level
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OLLIE'S STORY SO FAR -->
+    <section class="story-preview-card">
+      <div class="preview-header">
+        <strong style="font-size:0.92rem;color:var(--text-secondary);">📜 Your Writing So Far</strong>
+        <button class="btn-light" style="padding:3px 9px;font-size:0.76rem;" onclick="window.GameEngine.speakCompiledDraft()">
+          🔊 Read My Writing
+        </button>
+      </div>
+      <div class="compiled-box" id="compiled-scroll">
+        <div style="color:var(--text-muted);font-style:italic;font-size:0.9rem;">
+          Your finished parts will appear here as you write.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PARENT & CLOUD SETTINGS MODAL -->
+  <div class="modal-overlay" id="settings-modal">
+    <div class="modal-box">
+      <div class="preview-header" style="margin-bottom:12px;">
+        <strong style="font-size:1.05rem;">☁️ Parent Settings & Hidden ISA Progress Report</strong>
+        <button class="btn-light" onclick="window.GameEngine.closeSettingsModal()">✕ Close</button>
+      </div>
+
+      <div class="form-group">
+        <label for="input-webapp-url">Standalone Google Apps Script Web App URL:</label>
+        <input type="text" id="input-webapp-url" class="form-input" placeholder="https://script.google.com/macros/s/.../exec" />
+      </div>
+
+      <div class="form-group">
+        <label for="input-gcp-project">Option A: Google Cloud Project ID (Vertex AI — No VPN Required in HK):</label>
+        <input type="text" id="input-gcp-project" class="form-input" placeholder="e.g. milo-writing-crafter" />
+      </div>
+
+      <div class="form-group" style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label for="input-gcp-location">Vertex AI Region:</label>
+          <input type="text" id="input-gcp-location" class="form-input" value="us-central1" />
+        </div>
+        <div style="flex:1.2;">
+          <label for="input-gemini-key">Option B: Gemini API Key (from Cloud Credentials):</label>
+          <input type="password" id="input-gemini-key" class="form-input" placeholder="AIzaSy... (optional)" />
+        </div>
+      </div>
+
+      <div class="button-bar" style="margin-bottom:14px;">
+        <button class="btn-primary" onclick="window.GameEngine.saveCloudSettings()">💾 Save Cloud Settings</button>
+        <button class="btn-light" onclick="window.GameEngine.exportParentCsv()">📥 Download Report (CSV)</button>
+        <button class="btn-light" onclick="window.GameEngine.resetAllProgress()">🗑️ Reset Progress & Logs</button>
+      </div>
+
+      <strong style="font-size:0.9rem;display:block;margin-bottom:4px;">
+        🔒 Parent-Only ISA Rubric Scores (Hidden from Ollie's Screen)
+      </strong>
+      <div style="overflow-x:auto;">
+        <table class="parent-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Level</th>
+              <th>Words / WPM</th>
+              <th>Content /10</th>
+              <th>Language /10</th>
+              <th>Spelling /10</th>
+              <th>Total /30</th>
+              <th>Estimated Band</th>
+            </tr>
+          </thead>
+          <tbody id="parent-log-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-box" id="toast-box"></div>
+
+  <script>
+    window.DEFAULT_BANKS = {
+  "gameTitle": "Ollie's Writing Crafter",
+  "version": "1.2.0",
+  "lastUpdated": "2026-10-23",
+  "child": "ollie",
+  "folderId": "1otBnXAjMshBLG48yFe2oV3IcCTJGEEFA",
+  "missions": [
+    {
+      "levelId": "L01",
+      "order": 1,
+      "date": "2026-10-23",
+      "title": "Level 1: Trying On Our New Harry Potter Costumes",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Easy (2 Short Parts)",
+      "mode": "interview",
+      "minWords": 24,
+      "emeraldReward": 15,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "You and Milo just got brand-new Harry Potter costumes! Let's write a fun 2-part story about trying them on and casting your first spells together.",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about your new Harry Potter costumes — (1) putting on your wizard robe and casting your first spell with Milo, and (2) a funny moment at home and where you want to wear your costume next!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Costumes & First Spells",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about your new Harry Potter costumes — (1) putting on your wizard robe and casting your first spell with Milo, and (2) a funny moment at home and where you want to wear your costume next!\n\n👉 Part 1 of 2: When you and Milo put on your new Harry Potter costumes, what do they look like, and what is the first spell or magical game you try together?",
+          "hint": "🗺️ Overall Story Idea: Start by describing your cool wizard costume and first spell in Part 1, then finish with a funny moment and where you'll wear it next in Part 2! 👉 For Part 1: Write 1 or 2 sentences about your robe, wand, and first spell with Milo.",
+          "minStepWords": 10
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Funny Moment & Next Adventure",
+          "coachQuestion": "👉 Part 2 of 2: What funny or exciting thing happened when Mum and Dad saw you and Milo waving your wands, and where are you most excited to wear your Harry Potter costume next?",
+          "hint": "Finish your story with 1 or 2 sentences about what Mum or Dad said and where you want to wear your wizard costume next (like Halloween)!",
+          "minStepWords": 10
+        }
+      ]
+    },
+    {
+      "levelId": "L02",
+      "order": 2,
+      "date": "2026-10-23",
+      "title": "Level 2: Why Milo and I Should Watch Cartoons in the Car",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Easy (2 Short Parts)",
+      "mode": "interview",
+      "minWords": 24,
+      "emeraldReward": 15,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "You and Milo want to watch cartoons during car rides, and you are telling Mum and Dad why it is a good idea. Build your argument in 2 parts!",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece to convince Mum and Dad to let you and Milo watch cartoons in the car — (1) your main reason and how cartoons help during long car rides, and (2) the fair rules you and Milo promise to follow!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Your Main Reason",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece to convince Mum and Dad to let you and Milo watch cartoons in the car — (1) your main reason and how cartoons help during long car rides, and (2) the fair rules you and Milo promise to follow!\n\n👉 Part 1 of 2: Why do you think you and Milo should be allowed to watch cartoons in the car, and how does it help during a long ride or traffic?",
+          "hint": "🗺️ Overall Passage Idea: In Part 1, share your main reason why cartoons help in the car; in Part 2, promise a fair rule so Mum and Dad agree! 👉 For Part 1: Start with \"I think Milo and I should be allowed to watch cartoons in the car because...\"",
+          "minStepWords": 10
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Fair Rules & Final Promise",
+          "coachQuestion": "👉 Part 2 of 2: Parents sometimes worry that screens in the car hurt your eyes. What fair time limit or rule will you and Milo promise to follow so Mum and Dad say yes?",
+          "hint": "Promise a fair rule—like only watching on longer rides and turning it off right away without complaining when the car arrives!",
+          "minStepWords": 12
+        }
+      ]
+    },
+    {
+      "levelId": "L03",
+      "order": 3,
+      "date": "2026-10-22",
+      "title": "Level 3: A Tricky Game of Chess (or Board Game)",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Easy (2 Short Parts)",
+      "mode": "interview",
+      "minWords": 26,
+      "emeraldReward": 15,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Think about an exciting game of chess or a board game you played at home with Milo, Mum, or Dad. Tell the story in 2 parts!",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about a fun chess or board game match — (1) who you played against and a tricky or surprising move, and (2) what you decided to do and how the match ended!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: The Match & Tricky Move",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about a fun chess or board game match — (1) who you played against and a tricky or surprising move, and (2) what you decided to do and how the match ended!\n\n👉 Part 1 of 2: Who were you playing against at home, and what tricky or surprising move happened during the game?",
+          "hint": "🗺️ Overall Story Idea: Part 1 sets up who you played and the big turning point; Part 2 tells how the game finished! 👉 For Part 1: Name your opponent (like Milo or Dad) and the surprise move.",
+          "minStepWords": 12
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Your Move & How It Ended",
+          "coachQuestion": "👉 Part 2 of 2: How did you figure out your next move, and how did the game end?",
+          "hint": "Tell what move you chose, who won the game, and how you felt at the finish!",
+          "minStepWords": 12
+        }
+      ]
+    },
+    {
+      "levelId": "L04",
+      "order": 4,
+      "date": "2026-10-21",
+      "title": "Level 4: Should School Recess Be Longer?",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Easy (2 Short Parts)",
+      "mode": "interview",
+      "minWords": 26,
+      "emeraldReward": 15,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Imagine your school is thinking about adding 20 extra minutes to recess every day. Share your opinion in 2 parts!",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on school recess — (1) whether recess should be longer and what you play with your friends, and (2) how a good break helps your brain focus in class afterwards!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Your Opinion & Recess Fun",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on school recess — (1) whether recess should be longer and what you play with your friends, and (2) how a good break helps your brain focus in class afterwards!\n\n👉 Part 1 of 2: Do you think school recess should be longer, and what do you and your friends love doing during break time?",
+          "hint": "🗺️ Overall Passage Idea: Part 1 gives your opinion and playground games; Part 2 explains why a break helps you learn better in class! 👉 For Part 1: Start with \"I think school recess should be longer because...\"",
+          "minStepWords": 12
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Why It Helps Us Learn",
+          "coachQuestion": "👉 Part 2 of 2: How does running around and having a good break help you feel ready to listen and learn when you go back to the classroom?",
+          "hint": "Explain how fresh air and play help your brain focus, and finish with a message to your principal!",
+          "minStepWords": 12
+        }
+      ]
+    },
+    {
+      "levelId": "L05",
+      "order": 5,
+      "date": "2026-10-20",
+      "title": "Level 5: A Weekend Run or Outdoor Outing",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Medium (2 Short Paragraphs)",
+      "mode": "workshop",
+      "minWords": 40,
+      "emeraldReward": 25,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Write a 2-part story about going out for a run, a park visit, or an outdoor activity with your family on the weekend.",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about a weekend run or outdoor outing — Part 1: Setting off with the family and the most exciting part of the run; Part 2: Crossing the finish line and celebrating together!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Setting Off & The Main Action",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about a weekend run or outdoor outing — Part 1: Setting off with the family and the most exciting part of the run; Part 2: Crossing the finish line and celebrating together!\n\n👉 Part 1 of 2: Where did you go for your run or outing with Mum, Dad, and Milo, and what was the fastest or most exciting part?",
+          "hint": "🗺️ Overall Story Idea: Part 1 sets the outdoor scene and main action; Part 2 wraps up how you felt at the finish! 👉 For Part 1: Write 2 to 3 sentences about where you went and what happened.",
+          "minStepWords": 18
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Finishing & Celebrating",
+          "coachQuestion": "👉 Part 2 of 2: How did you feel when you finished the run or outing, and what tasty treat or fun activity did your family enjoy afterwards?",
+          "hint": "Write 2 sentences to bring your outdoor story to a happy close!",
+          "minStepWords": 18
+        }
+      ]
+    },
+    {
+      "levelId": "L06",
+      "order": 6,
+      "date": "2026-10-19",
+      "title": "Level 6: Picking the Best Class Field Trip",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Medium (2 Short Paragraphs)",
+      "mode": "workshop",
+      "minWords": 40,
+      "emeraldReward": 25,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Your teacher is letting the class vote on where to go for the next school outing (like the Science Museum, Ocean Park, or a nature park). Write a 2-part piece explaining where your class should go!",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part recommendation for your next class field trip — Part 1: Which place your class should visit and why; Part 2: What fun things your classmates will see and learn there!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Your Chosen Field Trip Spot",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part recommendation for your next class field trip — Part 1: Which place your class should visit and why; Part 2: What fun things your classmates will see and learn there!\n\n👉 Part 1 of 2: Which place should your class visit for the field trip, and why would everyone be excited to go there?",
+          "hint": "🗺️ Overall Passage Idea: Part 1 introduces the best trip spot; Part 2 describes the cool activities there! 👉 For Part 1: Name the place and give your main reason in 2 sentences.",
+          "minStepWords": 18
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Fun Things to See & Do",
+          "coachQuestion": "👉 Part 2 of 2: What are two fun things your class can see, try, or learn at that place, and why should everyone vote for it?",
+          "hint": "Give concrete examples of what you can do there and wrap up with a strong final sentence!",
+          "minStepWords": 18
+        }
+      ]
+    },
+    {
+      "levelId": "L07",
+      "order": 7,
+      "date": "2026-10-18",
+      "title": "Level 7: The Day Something Went Missing at Home",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Medium (2 Short Paragraphs)",
+      "mode": "workshop",
+      "minWords": 44,
+      "emeraldReward": 25,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Right before you need to leave the house, something important (like a favourite toy, a running shoe, or a water bottle) goes missing! Write a 2-part story about the search.",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about something going missing at home — Part 1: Discovering it is missing and searching the house; Part 2: Finding it in a funny spot just in time!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: The Missing Item & The Search",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about something going missing at home — Part 1: Discovering it is missing and searching the house; Part 2: Finding it in a funny spot just in time!\n\n👉 Part 1 of 2: What item suddenly went missing right before you needed to leave the house, and where did you look for it?",
+          "hint": "🗺️ Overall Story Idea: Part 1 shows the rush and search around the house; Part 2 reveals the funny place where it turned up! 👉 For Part 1: Mention what was missing and who helped you search.",
+          "minStepWords": 20
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: The Funny Discovery",
+          "coachQuestion": "👉 Part 2 of 2: Where did you finally find the missing item, and how did everyone feel when you made it out the door?",
+          "hint": "Reveal the surprising spot where you found it and finish with a happy ending!",
+          "minStepWords": 20
+        }
+      ]
+    },
+    {
+      "levelId": "L08",
+      "order": 8,
+      "date": "2026-10-17",
+      "title": "Level 8: A Memorable School Event or Sports Day",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Challenge (2 Parts)",
+      "mode": "workshop",
+      "minWords": 50,
+      "emeraldReward": 35,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Write a 2-part story about a memorable school event—such as Sports Day, a school race, or a class show—where you tried your hardest.",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about a memorable school event or Sports Day — Part 1: The excitement at the start of the event; Part 2: Trying your hardest and celebrating at the finish!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Starting the Big Event",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about a memorable school event or Sports Day — Part 1: The excitement at the start of the event; Part 2: Trying your hardest and celebrating at the finish!\n\n👉 Part 1 of 2: What was the special school event or race, and how did you feel at the starting line?",
+          "hint": "🗺️ Overall Story Idea: Part 1 sets the exciting scene at school; Part 2 zooms in on your big effort and how it ended! 👉 For Part 1: Describe the cheering crowd or getting ready with your classmates.",
+          "minStepWords": 22
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Trying Your Hardest & The Finish",
+          "coachQuestion": "👉 Part 2 of 2: What happened during the main race or performance when you tried your best, and how did you feel at the end?",
+          "hint": "Describe the most exciting moment and what made you proud at the finish!",
+          "minStepWords": 22
+        }
+      ]
+    },
+    {
+      "levelId": "L09",
+      "order": 9,
+      "date": "2026-10-16",
+      "title": "Level 9: Balancing Screen Time and Outdoor Play",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Challenge (2 Parts)",
+      "mode": "workshop",
+      "minWords": 50,
+      "emeraldReward": 35,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Games and iPads are fun, but outdoor play, running, and family time are important too. Write a 2-part piece sharing your opinion on fair screen-time rules for kids.",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on balancing screen time and outdoor play — Part 1: Your view on fair screen-time rules; Part 2: Why outdoor fun and sports matter too!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Fair Screen-Time Rules",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on balancing screen time and outdoor play — Part 1: Your view on fair screen-time rules; Part 2: Why outdoor fun and sports matter too!\n\n👉 Part 1 of 2: What do you think is a fair rule for playing games or watching shows on school days and weekends?",
+          "hint": "🗺️ Overall Passage Idea: Part 1 shares your fair rule for screen time; Part 2 explains why running and playing outside are just as important! 👉 For Part 1: Suggest a clear, fair time limit.",
+          "minStepWords": 22
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Why Outdoor Play Matters Too",
+          "coachQuestion": "👉 Part 2 of 2: Why is it important for kids to also spend time running outside, playing sports, and having fun with family?",
+          "hint": "Explain how outdoor play keeps us healthy, happy, and full of energy!",
+          "minStepWords": 22
+        }
+      ]
+    }
+  ]
+};
+  </script>
+
+  <script>
+    (function() {
+      const DEFAULT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbybiCtU66T4LDJin1zAkt9ie9mEoU4IMgM-Z839occrAocptze4WOkigu21hvkgqegL/exec';
+      const DEFAULT_GCP_PROJECT = 'milo-writing-crafter';
+
+      const STORAGE_KEYS = {
+        EMERALDS: 'ollie_isa_emeralds_v1_fresh',
+        CURRENT_LEVEL_IDX: 'ollie_isa_current_level_idx_v1_fresh',
+        WEBAPP_URL: 'ollie_isa_webapp_url_v1',
+        GCP_PROJECT: 'ollie_isa_gcp_project_v1',
+        GCP_LOCATION: 'ollie_isa_gcp_location_v1',
+        GEMINI_KEY: 'ollie_isa_gemini_key_v1',
+        PARENT_LOGS: 'ollie_isa_parent_logs_v1_fresh',
+        WARMUP_DONE: 'ollie_isa_warmup_done_v1',
+        SOUND_MUTED: 'ollie_isa_sound_muted_v1'
+      };
+
+      const memoryStorageFallback = {};
+      function safeGetStorage(key, defaultVal = '') {
+        try {
+          const val = window.localStorage.getItem(key);
+          return val !== null ? val : defaultVal;
+        } catch (e) {
+          return Object.prototype.hasOwnProperty.call(memoryStorageFallback, key)
+            ? memoryStorageFallback[key]
+            : defaultVal;
+        }
+      }
+
+      function safeSetStorage(key, val) {
+        try {
+          window.localStorage.setItem(key, String(val));
+        } catch (e) {
+          memoryStorageFallback[key] = String(val);
+        }
+      }
+
+      const COMMON_MISSPELLINGS = {
+        'restruant': 'restaurant',
+        'restaraunt': 'restaurant',
+        'resturant': 'restaurant',
+        'suace': 'sauce',
+        'becuase': 'because',
+        'beacuse': 'because',
+        'ourself': 'ourselves',
+        'instaneous': 'instantaneous',
+        'haloween': 'Halloween',
+        'dont': "don't",
+        'cant': "can't",
+        'wont': "won't",
+        'didnt': "didn't",
+        'wasnt': "wasn't",
+        'im': "I'm",
+        'definately': 'definitely',
+        'seperate': 'separate',
+        'alot': 'a lot',
+        'recieve': 'receive',
+        'untill': 'until',
+        'wich': 'which',
+        'teh': 'the',
+        'freind': 'friend',
+        'beleive': 'believe',
+        'wierd': 'weird',
+        'occured': 'occurred',
+        'tommorow': 'tomorrow',
+        'begining': 'beginning',
+        'dissapear': 'disappear',
+        'suprise': 'surprise',
+        'enviroment': 'environment',
+        'intresting': 'interesting'
+      };
+
+      const WEAK_WORDS_MAP = {
+        'went': ['walked quickly', 'rushed', 'stepped', 'headed'],
+        'said': ['called out', 'whispered', 'explained', 'asked'],
+        'good': ['great', 'enjoyable', 'helpful', 'exciting'],
+        'bad': ['unpleasant', 'difficult', 'frustrating', 'terrible'],
+        'nice': ['fun', 'wonderful', 'friendly', 'comfortable']
+      };
+
+      const STOPWORDS = new Set([
+        'the','and','was','were','that','this','with','from','into','onto','when','while',
+        'they','them','their','there','then','than','have','had','has','very','just','some',
+        'what','where','which','about','after','before','because','would','could','should',
+        'went','said','good','nice','like','really','outside','inside','school','morning'
+      ]);
+
+      const GameEngine = {
+        data: window.DEFAULT_BANKS,
+        missions: [],
+        currentMissionIndex: 0,
+        currentMission: null,
+        currentStepIndex: 0,
+        stepDrafts: [],
+        dynamicQuestions: {},
+        dynamicHints: {},
+        coachHistory: [],
+        lastPraiseBannerText: '',
+        emeralds: 20,
+        retryCompletedForMission: false,
+
+        typingStartTime: null,
+        activeTypingSeconds: 0,
+        lastKeystrokeTime: null,
+        currentWpm: 0,
+
+        // Two-Way Anchor Switch Typing Warm-Up State
+        warmupActive: false,
+        warmupStepIndex: 0,
+        warmupAnchorHeld: false,
+        warmupSoundMuted: false,
+        warmupAudioCtx: null,
+        warmupPlan: [
+          // Round 1 (Steps 0..9): Left hand holds [F], Right hand taps J, K, L, U, I (2x)
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'J' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'K' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'L' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'U' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'I' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'J' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'K' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'L' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'U' },
+          { round: 1, anchorHand: 'left', anchorKey: 'F', tapHand: 'right', tapKey: 'I' },
+          // Round 2 (Steps 10..19): Right hand holds [J], Left hand taps F, D, S, R, E (2x)
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'F' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'D' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'S' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'R' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'E' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'F' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'D' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'S' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'R' },
+          { round: 2, anchorHand: 'right', anchorKey: 'J', tapHand: 'left', tapKey: 'E' }
+        ],
+
+        init() {
+          this.emeralds = parseInt(safeGetStorage(STORAGE_KEYS.EMERALDS, '20'), 10);
+          this.updateEmeraldHud();
+
+          this.loadMissions(this.data.missions || []);
+
+          document.getElementById('level-select').addEventListener('change', (e) => {
+            const idx = parseInt(e.target.value, 10);
+            if (!isNaN(idx) && this.missions[idx]) {
+              this.currentMissionIndex = idx;
+              safeSetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, String(idx));
+              this.selectMission(this.missions[idx]);
+            }
+          });
+
+          const inputEl = document.getElementById('writing-input');
+          inputEl.addEventListener('keydown', (e) => this.handleKeyDown(e));
+          inputEl.addEventListener('input', () => this.handleInputUpdate());
+
+          document.getElementById('btn-open-settings').addEventListener('click', () => {
+            this.openSettingsModal();
+          });
+
+          this.warmupSoundMuted = safeGetStorage(STORAGE_KEYS.SOUND_MUTED, 'false') === 'true';
+          this.updateWarmupSoundBtn();
+
+          window.addEventListener('keydown', (e) => this.handleWarmupWindowKeyDown(e));
+          window.addEventListener('keyup', (e) => this.handleWarmupWindowKeyUp(e));
+          window.addEventListener('blur', () => {
+            if (this.warmupActive && this.warmupAnchorHeld) {
+              this.warmupAnchorHeld = false;
+              this.renderWarmupState();
+            }
+          });
+
+          this.syncCloudMissions();
+        },
+
+        loadMissions(rawMissions) {
+          this.missions = [...rawMissions].sort((a, b) => {
+            const ordA = a.order || parseInt((a.levelId || '0').replace(/\D/g, ''), 10) || 1;
+            const ordB = b.order || parseInt((b.levelId || '0').replace(/\D/g, ''), 10) || 1;
+            return ordA - ordB;
+          });
+
+          const selectEl = document.getElementById('level-select');
+          selectEl.innerHTML = '';
+          this.missions.forEach((m, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = m.title;
+            selectEl.appendChild(opt);
+          });
+
+          const savedIdx = parseInt(safeGetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, '0'), 10);
+          const startIdx = (savedIdx >= 0 && savedIdx < this.missions.length) ? savedIdx : 0;
+          this.currentMissionIndex = startIdx;
+          selectEl.value = startIdx;
+          if (this.missions[startIdx]) {
+            this.selectMission(this.missions[startIdx]);
+          }
+        },
+
+        selectMission(mission) {
+          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+          this.currentMission = mission;
+          this.currentStepIndex = 0;
+          this.retryCompletedForMission = false;
+          this.dynamicQuestions = {};
+          this.dynamicHints = {};
+          this.coachHistory = [];
+          this.lastPraiseBannerText = '';
+
+          const steps = this.getStepsArray(mission);
+          this.stepDrafts = new Array(steps.length).fill('');
+
+          this.typingStartTime = null;
+          this.activeTypingSeconds = 0;
+          this.lastKeystrokeTime = null;
+
+          document.getElementById('coach-name').textContent = `${mission.coachName || 'Coach Alex'} • ${mission.title}`;
+          document.getElementById('coach-avatar').textContent = mission.coachAvatar || '🦉';
+          document.getElementById('last-step-feedback').classList.remove('visible');
+          document.getElementById('review-panel').classList.remove('visible');
+
+          this.renderStepsBar();
+          this.loadStepIntoEditor(0);
+          this.renderCompiledScroll();
+
+          if (!this.isWarmupDoneForMission(mission.levelId)) {
+            this.startWarmup(false);
+          } else {
+            this.hideWarmupCard();
+          }
+        },
+
+        isWarmupDoneForMission(levelId) {
+          try {
+            const map = JSON.parse(safeGetStorage(STORAGE_KEYS.WARMUP_DONE, '{}'));
+            return Boolean(map && map[levelId]);
+          } catch (e) {
+            return false;
+          }
+        },
+
+        markWarmupDoneForMission(levelId) {
+          try {
+            const map = JSON.parse(safeGetStorage(STORAGE_KEYS.WARMUP_DONE, '{}')) || {};
+            map[levelId] = true;
+            safeSetStorage(STORAGE_KEYS.WARMUP_DONE, JSON.stringify(map));
+          } catch (e) {}
+        },
+
+        startWarmup(manualReplay = false) {
+          this.warmupActive = true;
+          this.warmupStepIndex = 0;
+          this.warmupAnchorHeld = false;
+
+          const warmupCard = document.getElementById('typing-warmup-card');
+          const writingCard = document.getElementById('main-writing-card');
+          warmupCard.classList.add('visible');
+          writingCard.classList.add('locked-by-warmup');
+
+          this.setCoachFeedback(
+            '✋ Two-Hand Warm-Up',
+            'great',
+            `Before we start "${this.currentMission ? this.currentMission.title : 'today\'s story'}", let's wake up BOTH hands with a quick 20-tap finger warm-up (+5 💎)!`,
+            'Round 1 trains your right hand while your left hand holds [ F ]. Round 2 switches hands so your right hand holds [ J ] while your left hand taps!'
+          );
+
+          this.renderWarmupState();
+          if (manualReplay) {
+            warmupCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        },
+
+        hideWarmupCard() {
+          this.warmupActive = false;
+          this.warmupAnchorHeld = false;
+          document.getElementById('typing-warmup-card').classList.remove('visible');
+          document.getElementById('main-writing-card').classList.remove('locked-by-warmup');
+        },
+
+        skipWarmup() {
+          this.hideWarmupCard();
+          this.loadStepIntoEditor(this.currentStepIndex);
+          const inputEl = document.getElementById('writing-input');
+          if (inputEl) inputEl.focus();
+          this.showToast('⏭️ Warm-up skipped — ready to write!');
+        },
+
+        toggleWarmupSound() {
+          this.warmupSoundMuted = !this.warmupSoundMuted;
+          safeSetStorage(STORAGE_KEYS.SOUND_MUTED, String(this.warmupSoundMuted));
+          this.updateWarmupSoundBtn();
+          if (!this.warmupSoundMuted) {
+            this.playWarmupTone('hold');
+          }
+        },
+
+        updateWarmupSoundBtn() {
+          const btn = document.getElementById('btn-warmup-sound');
+          if (btn) {
+            btn.textContent = this.warmupSoundMuted ? '🔇 Muted' : '🔊 Sound On';
+          }
+        },
+
+        playWarmupTone(type, stepIdx = 0) {
+          if (this.warmupSoundMuted) return;
+          try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            if (!this.warmupAudioCtx) {
+              this.warmupAudioCtx = new AudioCtx();
+            }
+            if (this.warmupAudioCtx.state === 'suspended') {
+              this.warmupAudioCtx.resume();
+            }
+            const ctx = this.warmupAudioCtx;
+            const now = ctx.currentTime;
+
+            if (type === 'hold') {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(330, now);
+              gain.gain.setValueAtTime(0.08, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now);
+              osc.stop(now + 0.14);
+            } else if (type === 'hit') {
+              const scale = [523.25, 587.33, 659.25, 783.99, 880.0];
+              const freq = scale[stepIdx % scale.length];
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'triangle';
+              osc.frequency.setValueAtTime(freq, now);
+              osc.frequency.exponentialRampToValueAtTime(freq * 1.15, now + 0.11);
+              gain.gain.setValueAtTime(0.14, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now);
+              osc.stop(now + 0.14);
+            } else if (type === 'round') {
+              [587.33, 880.0].forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + i * 0.11);
+                gain.gain.setValueAtTime(0.15, now + i * 0.11);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.11 + 0.2);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.11);
+                osc.stop(now + i * 0.11 + 0.2);
+              });
+            } else if (type === 'win') {
+              [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + i * 0.09);
+                gain.gain.setValueAtTime(0.16, now + i * 0.09);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.24);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now + i * 0.09);
+                osc.stop(now + i * 0.09 + 0.24);
+              });
+            } else if (type === 'remind') {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(210, now);
+              gain.gain.setValueAtTime(0.1, now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start(now);
+              osc.stop(now + 0.18);
+            }
+          } catch (e) {}
+        },
+
+        extractKeyLetter(e) {
+          if (!e) return '';
+          if (e.code && /^Key[A-Z]$/.test(e.code)) {
+            return e.code.slice(3).toUpperCase();
+          }
+          if (e.key && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+            return e.key.toUpperCase();
+          }
+          return '';
+        },
+
+        handleWarmupWindowKeyDown(e) {
+          if (!this.warmupActive) return;
+          if (e.metaKey || e.ctrlKey || e.altKey) return;
+          const activeTag = document.activeElement ? document.activeElement.tagName : '';
+          if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+
+          const letter = this.extractKeyLetter(e);
+          if (!letter) return;
+
+          e.preventDefault();
+          const item = this.warmupPlan[this.warmupStepIndex];
+          if (!item) return;
+
+          if (letter === item.anchorKey) {
+            if (!this.warmupAnchorHeld) {
+              this.warmupAnchorHeld = true;
+              this.playWarmupTone('hold');
+              this.renderWarmupState();
+            }
+            return;
+          }
+
+          if (e.repeat) return;
+
+          if (letter === item.tapKey) {
+            this.processWarmupTapAttempt();
+          } else {
+            this.playWarmupTone('remind');
+            const instrEl = document.getElementById('warmup-instruction');
+            if (instrEl) {
+              instrEl.className = 'warmup-instruction warn';
+              if (!this.warmupAnchorHeld) {
+                instrEl.textContent = `✋ Hold down [ ${item.anchorKey} ] with your ${item.anchorHand.toUpperCase()} hand first, then tap [ ${item.tapKey} ]!`;
+              } else {
+                instrEl.textContent = `Almost! You pressed [ ${letter} ] — tap [ ${item.tapKey} ] with your ${item.tapHand.toUpperCase()} hand!`;
+              }
+            }
+          }
+        },
+
+        handleWarmupWindowKeyUp(e) {
+          if (!this.warmupActive) return;
+          const letter = this.extractKeyLetter(e);
+          if (!letter) return;
+          const item = this.warmupPlan[this.warmupStepIndex];
+          if (item && letter === item.anchorKey) {
+            this.warmupAnchorHeld = false;
+            this.renderWarmupState();
+          }
+        },
+
+        handleWarmupCardClick(side) {
+          if (!this.warmupActive) return;
+          const item = this.warmupPlan[this.warmupStepIndex];
+          if (!item) return;
+
+          if (side === item.anchorHand) {
+            this.warmupAnchorHeld = !this.warmupAnchorHeld;
+            if (this.warmupAnchorHeld) this.playWarmupTone('hold');
+            this.renderWarmupState();
+          } else if (side === item.tapHand) {
+            this.processWarmupTapAttempt();
+          }
+        },
+
+        processWarmupTapAttempt() {
+          const item = this.warmupPlan[this.warmupStepIndex];
+          if (!item) return;
+
+          if (!this.warmupAnchorHeld) {
+            this.playWarmupTone('remind');
+            const anchorCardId = item.anchorHand === 'left' ? 'warmup-left-card' : 'warmup-right-card';
+            const anchorCard = document.getElementById(anchorCardId);
+            if (anchorCard) {
+              anchorCard.classList.remove('shake-warn');
+              void anchorCard.offsetWidth;
+              anchorCard.classList.add('shake-warn');
+            }
+            const instrEl = document.getElementById('warmup-instruction');
+            if (instrEl) {
+              instrEl.className = 'warmup-instruction warn';
+              instrEl.textContent = `✋ Hold down [ ${item.anchorKey} ] with your ${item.anchorHand.toUpperCase()} hand first, and keep holding it while your ${item.tapHand.toUpperCase()} hand taps [ ${item.tapKey} ]!`;
+            }
+            return;
+          }
+
+          // Valid bilateral hit!
+          const tapCardId = item.tapHand === 'left' ? 'warmup-left-card' : 'warmup-right-card';
+          const tapCard = document.getElementById(tapCardId);
+          if (tapCard) {
+            tapCard.classList.add('pop-hit');
+            setTimeout(() => tapCard.classList.remove('pop-hit'), 150);
+          }
+
+          this.warmupStepIndex += 1;
+
+          if (this.warmupStepIndex === 10) {
+            // Switch from Round 1 (Left holds F, Right taps) to Round 2 (Right holds J, Left taps)
+            this.warmupAnchorHeld = false;
+            this.playWarmupTone('round');
+            this.setCoachFeedback(
+              '🔄 Switch Hands!',
+              'brilliant',
+              'Awesome right-hand tapping, Ollie! Now Round 2: Hold down [ J ] with your RIGHT hand and tap with your LEFT hand!',
+              'Press and hold [ J ] with your right index finger so your left hand can tap F, D, S, R, E.'
+            );
+            this.renderWarmupState(true);
+            return;
+          }
+
+          if (this.warmupStepIndex >= this.warmupPlan.length) {
+            this.completeWarmup();
+            return;
+          }
+
+          this.playWarmupTone('hit', this.warmupStepIndex);
+          this.renderWarmupState();
+        },
+
+        renderWarmupState(justSwitchedRound = false) {
+          const item = this.warmupPlan[this.warmupStepIndex];
+          if (!item) return;
+
+          const total = this.warmupPlan.length;
+          const pct = Math.round((this.warmupStepIndex / total) * 100);
+          document.getElementById('warmup-tap-count').textContent = this.warmupStepIndex;
+          document.getElementById('warmup-progress-fill').style.width = `${pct}%`;
+
+          const roundBadge = document.getElementById('warmup-round-badge');
+          if (item.round === 1) {
+            roundBadge.className = 'warmup-round-badge';
+            roundBadge.textContent = 'Round 1 of 2 • Right-Hand Tap';
+          } else {
+            roundBadge.className = 'warmup-round-badge round-two';
+            roundBadge.textContent = 'Round 2 of 2 • Left-Hand Tap';
+          }
+
+          const leftCard = document.getElementById('warmup-left-card');
+          const rightCard = document.getElementById('warmup-right-card');
+          const leftRole = document.getElementById('warmup-left-role');
+          const rightRole = document.getElementById('warmup-right-role');
+          const leftKey = document.getElementById('warmup-left-key');
+          const rightKey = document.getElementById('warmup-right-key');
+          const leftStatus = document.getElementById('warmup-left-status');
+          const rightStatus = document.getElementById('warmup-right-status');
+          const instrEl = document.getElementById('warmup-instruction');
+
+          if (item.round === 1) {
+            // Left hand holds [F], Right hand taps [J, K, L, U, I]
+            leftKey.textContent = item.anchorKey;
+            rightKey.textContent = item.tapKey;
+
+            if (this.warmupAnchorHeld) {
+              leftCard.className = 'hand-card anchor-active';
+              leftRole.textContent = '✓ HOLDING [ F ]';
+              leftStatus.textContent = 'Great! Keep holding [ F ] down!';
+
+              rightCard.className = 'hand-card target-ready';
+              rightRole.textContent = '👉 TAP NOW!';
+              rightStatus.textContent = `Tap [ ${item.tapKey} ] with your right hand!`;
+
+              instrEl.className = 'warmup-instruction success';
+              instrEl.textContent = `✓ Left hand holding [ F ]! Now tap [ ${item.tapKey} ] with your RIGHT hand!`;
+            } else {
+              leftCard.className = 'hand-card anchor-waiting';
+              leftRole.textContent = 'STEP 1: HOLD DOWN';
+              leftStatus.textContent = 'Press & hold [ F ] with left hand';
+
+              rightCard.className = 'hand-card target-waiting';
+              rightRole.textContent = 'STEP 2: TAP KEY';
+              rightStatus.textContent = `Hold [ F ] first, then tap [ ${item.tapKey} ]`;
+
+              instrEl.className = 'warmup-instruction';
+              instrEl.textContent = `✋ Hold down [ F ] with your LEFT hand ➔ Tap [ ${item.tapKey} ] with your RIGHT hand!`;
+            }
+          } else {
+            // Round 2: Right hand holds [J], Left hand taps [F, D, S, R, E]
+            leftKey.textContent = item.tapKey;
+            rightKey.textContent = item.anchorKey;
+
+            if (this.warmupAnchorHeld) {
+              rightCard.className = 'hand-card anchor-active';
+              rightRole.textContent = '✓ HOLDING [ J ]';
+              rightStatus.textContent = 'Great! Keep holding [ J ] down!';
+
+              leftCard.className = 'hand-card target-ready';
+              leftRole.textContent = '👉 TAP NOW!';
+              leftStatus.textContent = `Tap [ ${item.tapKey} ] with your left hand!`;
+
+              instrEl.className = 'warmup-instruction success';
+              instrEl.textContent = `✓ Right hand holding [ J ]! Now tap [ ${item.tapKey} ] with your LEFT hand!`;
+            } else {
+              rightCard.className = 'hand-card anchor-waiting';
+              rightRole.textContent = 'STEP 1: HOLD DOWN';
+              rightStatus.textContent = 'Press & hold [ J ] with right hand';
+
+              leftCard.className = 'hand-card target-waiting';
+              leftRole.textContent = 'STEP 2: TAP KEY';
+              leftStatus.textContent = `Hold [ J ] first, then tap [ ${item.tapKey} ]`;
+
+              instrEl.className = justSwitchedRound ? 'warmup-instruction success' : 'warmup-instruction';
+              instrEl.textContent = justSwitchedRound
+                ? `🔄 Switch hands! Hold down [ J ] with your RIGHT hand ➔ Tap [ ${item.tapKey} ] with your LEFT hand!`
+                : `🤚 Hold down [ J ] with your RIGHT hand ➔ Tap [ ${item.tapKey} ] with your LEFT hand!`;
+            }
+          }
+
+          // Render sequence dots for current round (10 taps per round)
+          const seqRow = document.getElementById('warmup-seq-row');
+          const roundStart = item.round === 1 ? 0 : 10;
+          const roundSlice = this.warmupPlan.slice(roundStart, roundStart + 10);
+          seqRow.innerHTML = roundSlice.map((stepObj, i) => {
+            const globalIdx = roundStart + i;
+            const cls = globalIdx < this.warmupStepIndex
+              ? 'seq-key-dot done'
+              : globalIdx === this.warmupStepIndex
+                ? 'seq-key-dot current'
+                : 'seq-key-dot';
+            return `<span class="${cls}">${stepObj.tapKey}</span>`;
+          }).join('');
+        },
+
+        completeWarmup() {
+          this.playWarmupTone('win');
+          document.getElementById('warmup-tap-count').textContent = '20';
+          document.getElementById('warmup-progress-fill').style.width = '100%';
+          const instrEl = document.getElementById('warmup-instruction');
+          instrEl.className = 'warmup-instruction success';
+          instrEl.textContent = '🎉 Both hands warmed up! +5 💎 Emeralds earned — unlocking Part 1!';
+
+          if (this.currentMission && this.currentMission.levelId) {
+            this.markWarmupDoneForMission(this.currentMission.levelId);
+          }
+          this.awardEmeralds(5, '⚡ Two-Hand Warm-Up Complete! +5 💎');
+
+          setTimeout(() => {
+            this.hideWarmupCard();
+            this.loadStepIntoEditor(this.currentStepIndex);
+            const inputEl = document.getElementById('writing-input');
+            if (inputEl) inputEl.focus();
+          }, 850);
+        },
+
+        getStepsArray(mission) {
+          const list = mission.steps || mission.socraticSteps || mission.workshopMilestones || [];
+          if (list.length > 0) {
+            return list.map((s, idx) => ({
+              shortLabel: `Part ${idx + 1}`,
+              question: s.coachQuestion || s.goal || mission.promptScenario,
+              hint: s.hint || '',
+              minWords: s.minStepWords || s.minParagraphWords || 10
+            }));
+          }
+          return [{
+            shortLabel: 'Full Piece',
+            question: mission.promptScenario,
+            hint: '',
+            minWords: mission.minWords || 120
+          }];
+        },
+
+        renderStepsBar() {
+          const steps = this.getStepsArray(this.currentMission);
+          const bar = document.getElementById('steps-bar');
+          bar.innerHTML = '';
+          if (steps.length <= 1) {
+            bar.innerHTML = `<span class="step-pill active">Full Piece</span>`;
+            return;
+          }
+          steps.forEach((st, idx) => {
+            const span = document.createElement('span');
+            const words = (this.stepDrafts[idx] || '').trim().split(/\s+/).filter(Boolean).length;
+            const isDone = words >= st.minWords;
+            span.className = 'step-pill' + (idx === this.currentStepIndex ? ' active' : '') + (isDone ? ' done' : '');
+            span.textContent = isDone ? `✓ ${st.shortLabel}` : st.shortLabel;
+            span.onclick = () => {
+              this.saveCurrentEditorToStep();
+              this.loadStepIntoEditor(idx);
+            };
+            bar.appendChild(span);
+          });
+        },
+
+        /**
+         * Extracts key phrases and details from Milo's previous parts and previous hints
+         * so that even without cloud latency, every question and hint builds directly on
+         * what Milo actually wrote in earlier steps!
+         */
+        buildContextualQuestionAndHint(idx) {
+          const steps = this.getStepsArray(this.currentMission);
+          const baseStep = steps[idx];
+          if (idx === 0) {
+            return { question: baseStep.question, hint: baseStep.hint };
+          }
+
+          if (this.dynamicQuestions[idx] || this.dynamicHints[idx]) {
+            return {
+              question: this.dynamicQuestions[idx] || baseStep.question,
+              hint: this.dynamicHints[idx] || baseStep.hint
+            };
+          }
+
+          const priorParts = this.stepDrafts.slice(0, idx).map(s => s.trim()).filter(Boolean);
+          if (priorParts.length === 0) {
+            return { question: baseStep.question, hint: baseStep.hint };
+          }
+
+          const allPriorText = priorParts.join(' ');
+          const lowerPrior = allPriorText.toLowerCase();
+          const latestPriorText = priorParts[priorParts.length - 1];
+          const snippet = this.extractKeyPhrase(latestPriorText);
+          const lowerBaseQ = baseStep.question.toLowerCase();
+
+          // Smart Anti-Redundancy Check: Detect if Milo ALREADY answered the upcoming question in an earlier part!
+                    // Case 0: Cartoons in the Car — check if Milo already mentioned boredom/long rides/quiet driving in Part 1
+          if (lowerBaseQ.includes('long car ride') && /(boring|bored|long|traffic|quiet|calm|drive|driving|argue|fighting)/i.test(allPriorText)) {
+            return {
+              question: `👉 Part ${idx + 1}: You already mentioned how car rides can feel ${RegExp.$1.toLowerCase()}! What kind of cartoons would you and Milo watch together in the back seat, and how does sharing a show help the person driving?`,
+              hint: `Describe how watching a show together keeps the back seat peaceful and happy so Mum or Dad can focus on the road!`
+            };
+          }
+          if (lowerBaseQ.includes('parents sometimes worry') && /(eyes|dizzy|sick|minute|limit|rule|promise|long trip)/i.test(allPriorText)) {
+            return {
+              question: `👉 Part ${idx + 1}: Building on what you said about "${snippet}", how will you and Milo prove to Mum and Dad that you can turn the screen off immediately without complaining when the car parks?`,
+              hint: `Explain the exact deal or rule you and Milo will follow so Mum and Dad never have to remind you twice!`
+            };
+          }
+
+          // Case 1: Upcoming step asks about favourite food/dish, but Milo already named a specific food/dish in Part 1
+          const foodMatch = allPriorText.match(/\b(cucumber[^.,!]*|sushi|ramen|noodles|pizza|burger|dumplings|dim sum|pasta|steak|curry|rice|chicken|ice cream|pancakes)\b/i);
+          if ((lowerBaseQ.includes('best food') || lowerBaseQ.includes('best dish') || lowerBaseQ.includes('what to eat')) && foodMatch) {
+            const dish = foodMatch[0];
+            return {
+              question: `👉 Part ${idx + 1}: You already mentioned loving ${dish}! When it arrives at your table, what does the restaurant smell or look like, and what makes eating ${dish} there so good?`,
+              hint: `Describe the smell at the table, how the food arrives (like on a sushi train or sizzling plate), or how ${dish} tastes!`
+            };
+          }
+
+          // Case 2: Upcoming step asks about the first spell/game, but Milo already named a spell in Part 1
+          const spellMatch = allPriorText.match(/\b(avada\s*k[ae]davra|expelliarmus|wingardium\s*leviosa|lumos|expecto\s*patronum|alohomora|spell)\b/i);
+          if (lowerBaseQ.includes('first spell') && spellMatch) {
+            return {
+              question: `👉 Part ${idx + 1}: Since you already mentioned ${spellMatch[0]}, how did you and Milo act out your wizard duel or magical adventure around the house?`,
+              hint: `Describe where you and Milo stood in the house and how you waved your wands or dodged each other's spells!`
+            };
+          }
+
+          // Case 3: Upcoming step asks about convincing the family / what others think, and Milo already mentioned brother/Ollie/mom/dad
+          if (lowerBaseQ.includes('convincing') || lowerBaseQ.includes('someone else in the family')) {
+            const placeMatch = allPriorText.match(/\b(Genki\s*Sushi|[A-Z][a-z]+\s+(?:Sushi|Restaurant|Cafe|Kitchen|Pizza|House))\b/);
+            const placeName = placeMatch ? placeMatch[0] : 'your chosen spot';
+            return {
+              question: `👉 Part ${idx + 1}: You and Milo love ${placeName}, but what if Mum or Dad wants to eat something different? How does going to ${placeName} work out for the whole family?`,
+              hint: `Explain what you and Milo get to choose there, or why Mum and Dad should still take you!`
+            };
+          }
+
+          // Case 4: Closing / Final Part — weave in the main details from Parts 1..N-1
+          if (idx === steps.length - 1 && priorParts.length >= 1) {
+            return {
+              question: `👉 Final Part (${idx + 1} of ${steps.length}): Building on everything you wrote so far ("${snippet}"), ${baseStep.question.replace(/^👉\s*Part\s*\d+[^:]*:\s*/i, '')}`,
+              hint: `Tie together your earlier points into a memorable final sentence or two!`
+            };
+          }
+
+          return {
+            question: `👉 Part ${idx + 1} (building on "${snippet}"): ${baseStep.question.replace(/^👉\s*Part\s*\d+[^:]*:\s*/i, '')}`,
+            hint: `Connect directly to "${snippet}"! ${baseStep.hint}`
+          };
+        },
+
+        extractKeyPhrase(text) {
+          if (!text) return '';
+          const cleaned = text.replace(/["']/g, '').trim();
+          const sentences = cleaned.split(/(?<=[.!?])\s+/).filter(Boolean);
+          const lastSent = (sentences[sentences.length - 1] || cleaned).replace(/[.!?]+$/, '').trim();
+          const words = lastSent.split(/\s+/);
+          if (words.length <= 9) return lastSent;
+          return words.slice(0, 9).join(' ') + '...';
+        },
+
+        loadStepIntoEditor(idx) {
+          const steps = this.getStepsArray(this.currentMission);
+          this.currentStepIndex = idx;
+          const st = steps[idx];
+
+          const contextual = this.buildContextualQuestionAndHint(idx);
+
+          const praiseBanner = document.getElementById('last-step-feedback');
+          if (idx > 0 && this.lastPraiseBannerText) {
+            praiseBanner.innerHTML = this.lastPraiseBannerText;
+            praiseBanner.classList.add('visible');
+          } else {
+            praiseBanner.classList.remove('visible');
+          }
+
+          this.setCoachFeedback("⭐ Let's Write", 'great', contextual.question, '');
+          document.getElementById('step-word-goal').textContent = st.minWords;
+
+          const btnSubmit = document.getElementById('btn-submit-step');
+          btnSubmit.textContent = (idx < steps.length - 1) ? '✅ Next Part' : '✅ Save Final Part';
+
+          const inputEl = document.getElementById('writing-input');
+          inputEl.value = this.stepDrafts[idx] || '';
+          this.renderStepsBar();
+          this.handleInputUpdate();
+        },
+
+        saveCurrentEditorToStep() {
+          const val = document.getElementById('writing-input').value;
+          this.stepDrafts[this.currentStepIndex] = val;
+        },
+
+        handleKeyDown(e) {
+          const now = Date.now();
+          if (!this.typingStartTime) this.typingStartTime = now;
+          if (this.lastKeystrokeTime && (now - this.lastKeystrokeTime) < 4000) {
+            this.activeTypingSeconds += (now - this.lastKeystrokeTime) / 1000;
+          }
+          this.lastKeystrokeTime = now;
+        },
+
+        handleInputUpdate() {
+          this.saveCurrentEditorToStep();
+          const currentText = document.getElementById('writing-input').value.trim();
+          const stepWords = currentText ? currentText.split(/\s+/).length : 0;
+
+          const fullDraft = this.getCompiledDraftText();
+          const totalWords = fullDraft ? fullDraft.split(/\s+/).length : 0;
+
+          document.getElementById('step-word-count').textContent = stepWords;
+          document.getElementById('total-word-count').textContent = totalWords;
+
+          const elapsedMin = Math.max(0.15, this.activeTypingSeconds / 60);
+          if (totalWords > 2) {
+            this.currentWpm = Math.min(95, Math.round(totalWords / elapsedMin));
+            document.getElementById('hud-wpm').textContent = this.currentWpm;
+          }
+
+          this.renderCompiledScroll();
+        },
+
+        getCompiledDraftText() {
+          return this.stepDrafts.map(s => s.trim()).filter(Boolean).join('\n\n');
+        },
+
+        getStorySoFarUpTo(maxIdx) {
+          return this.stepDrafts
+            .slice(0, maxIdx)
+            .map((s, i) => s.trim() ? `Part ${i + 1}: "${s.trim()}"` : '')
+            .filter(Boolean)
+            .join('\n');
+        },
+
+        renderCompiledScroll() {
+          const box = document.getElementById('compiled-scroll');
+          const steps = this.getStepsArray(this.currentMission);
+          const nonEmpty = this.stepDrafts.some(s => s.trim().length > 0);
+          if (!nonEmpty) {
+            box.innerHTML = `<div style="color:var(--text-muted);font-style:italic;font-size:0.9rem;">Your finished parts will appear here as you write.</div>`;
+            return;
+          }
+
+          box.innerHTML = '';
+          steps.forEach((st, idx) => {
+            const txt = (this.stepDrafts[idx] || '').trim();
+            if (!txt) return;
+            const part = document.createElement('div');
+            part.className = 'compiled-part';
+            part.innerHTML = `<div>${this.escapeHtml(txt)}</div>`;
+            box.appendChild(part);
+          });
+        },
+
+        async submitCurrentStep() {
+          this.saveCurrentEditorToStep();
+          const steps = this.getStepsArray(this.currentMission);
+          const st = steps[this.currentStepIndex];
+          const text = (this.stepDrafts[this.currentStepIndex] || '').trim();
+          const wordCount = text ? text.split(/\s+/).length : 0;
+
+          if (wordCount < Math.max(5, st.minWords - 3)) {
+            const contextual = this.buildContextualQuestionAndHint(this.currentStepIndex);
+            this.setCoachFeedback(
+              '🔧 Add a Little More',
+              'inaccuracy',
+              `Nice start, Ollie! You have ${wordCount} words so far—try adding one more detail to reach ${st.minWords} words.`,
+              contextual.hint
+            );
+            return;
+          }
+
+          const btnSubmit = document.getElementById('btn-submit-step');
+          const origBtnText = btnSubmit.textContent;
+          btnSubmit.textContent = '⏳ Coach Alex is reading...';
+          btnSubmit.disabled = true;
+
+          const analysis = this.analyzeSentenceHeuristically(text, this.currentStepIndex);
+          const nextIdx = this.currentStepIndex + 1;
+          const nextStepObj = (nextIdx < steps.length) ? steps[nextIdx] : null;
+
+          const liveFeedback = await this.fetchLiveCoachTurn(text, st, nextStepObj);
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = origBtnText;
+
+          let finalBadge = analysis.badge;
+          let finalBadgeClass = analysis.badgeClass;
+          let finalPraise = analysis.praise;
+
+          if (liveFeedback) {
+            finalBadge = liveFeedback.moveBadge || analysis.badge;
+            finalBadgeClass = (finalBadge || '').includes('Brilliant') ? 'brilliant' :
+                              (finalBadge || '').includes('Fix') || (finalBadge || '').includes('Inaccuracy') ? 'inaccuracy' : 'great';
+            finalPraise = liveFeedback.coachPraise || analysis.praise;
+            if (nextStepObj && liveFeedback.dynamicNextQuestion) {
+              this.dynamicQuestions[nextIdx] = liveFeedback.dynamicNextQuestion;
+            }
+            if (nextStepObj && liveFeedback.dynamicNextHint) {
+              this.dynamicHints[nextIdx] = liveFeedback.dynamicNextHint;
+            }
+          }
+
+          this.coachHistory.push({
+            stepIndex: this.currentStepIndex + 1,
+            studentText: text,
+            praiseGiven: finalPraise,
+            hintGiven: (liveFeedback && liveFeedback.dynamicNextHint) ? liveFeedback.dynamicNextHint : analysis.hint
+          });
+
+          this.awardEmeralds(5, `✅ Part ${this.currentStepIndex + 1} saved! +5 💎`);
+
+          const fixNote = analysis.hint ? ` <em>(${this.escapeHtml(analysis.hint)})</em>` : '';
+          this.lastPraiseBannerText = `<strong>${this.escapeHtml(finalBadge)} on Part ${this.currentStepIndex + 1}:</strong> ${this.escapeHtml(finalPraise)}${fixNote}`;
+
+          this.setCoachFeedback(finalBadge, finalBadgeClass, finalPraise, analysis.hint);
+
+          if (this.currentStepIndex < steps.length - 1) {
+            clearTimeout(this._stepAdvanceTimer);
+            this._stepAdvanceTimer = setTimeout(() => {
+              this.loadStepIntoEditor(this.currentStepIndex + 1);
+            }, 4800);
+          } else {
+            this.runGameReview();
+          }
+        },
+
+        async askHint() {
+          this.saveCurrentEditorToStep();
+          const text = document.getElementById('writing-input').value.trim();
+          const contextual = this.buildContextualQuestionAndHint(this.currentStepIndex);
+
+          const btnHint = document.getElementById('btn-hint');
+          btnHint.textContent = '⏳ Thinking...';
+
+          const liveHint = await this.fetchLiveContextualHint(text, contextual.question);
+          btnHint.textContent = '💡 Hint';
+
+          if (liveHint && liveHint.contextualHint) {
+            this.dynamicHints[this.currentStepIndex] = liveHint.contextualHint;
+            this.coachHistory.push({
+              stepIndex: this.currentStepIndex + 1,
+              studentText: text,
+              hintGiven: liveHint.contextualHint
+            });
+            this.setCoachFeedback('💡 Coach Hint', 'great', contextual.question, liveHint.contextualHint);
+            return;
+          }
+
+          if (!text) {
+            this.coachHistory.push({
+              stepIndex: this.currentStepIndex + 1,
+              studentText: '',
+              hintGiven: contextual.hint
+            });
+            this.setCoachFeedback('💡 Coach Hint', 'great', contextual.question, contextual.hint);
+            return;
+          }
+
+          const analysis = this.analyzeSentenceHeuristically(text, this.currentStepIndex);
+          const combinedHint = `${analysis.praise} ${analysis.hint}`;
+          this.coachHistory.push({
+            stepIndex: this.currentStepIndex + 1,
+            studentText: text,
+            hintGiven: combinedHint
+          });
+          this.setCoachFeedback(analysis.badge, analysis.badgeClass, contextual.question, combinedHint);
+        },
+
+        /**
+         * Context-conscious, varied feedback analyzer (never repeats "vivid, well-explained part"!).
+         */
+        analyzeSentenceHeuristically(text, stepIdx = 0) {
+          const words = text.split(/\s+/).filter(Boolean);
+          const lower = text.toLowerCase();
+          const snippet = this.extractKeyPhrase(text);
+
+          // 1. Check all common misspellings (collect up to 2 so Milo gets specific, helpful feedback)
+          const foundSlips = [];
+          for (const [wrong, right] of Object.entries(COMMON_MISSPELLINGS)) {
+            const regex = new RegExp(`\\b${wrong}\\b`, 'i');
+            if (regex.test(text)) {
+              foundSlips.push({ wrong, right });
+            }
+          }
+          if (/\btake it of\b/i.test(text)) {
+            foundSlips.push({ wrong: 'take it of', right: 'take it off' });
+          }
+
+          // 2. Build content-specific praise based on what Milo actually wrote in this sentence/part!
+          let contentPraise = '';
+          if (/because|becuase|since|so that/i.test(text)) {
+            contentPraise = `I love how you explained the reason behind your choice ("${snippet}")!`;
+          } else if (/smell|taste|sound|look|feel|dipped|crispy|warm|sweet|savory/i.test(text)) {
+            contentPraise = `Bringing in senses like smell and taste in "${snippet}" makes the reader feel right there at the table!`;
+          } else if (/milo|ollie|brother|mom|mum|dad|family|friend/i.test(text)) {
+            contentPraise = `Including your family in "${snippet}" makes your writing personal and fun to read!`;
+          } else if (/anyways|actually|however|although|first|next|finally/i.test(text)) {
+            contentPraise = `Great conversational voice in "${snippet}"—your transition connects your thoughts smoothly!`;
+          } else {
+            const variedPraises = [
+              `Great job naming specific details in "${snippet}"!`,
+              `Your point in "${snippet}" comes across clearly and naturally!`,
+              `Nice storytelling touch in "${snippet}"—it sets up the scene really well!`,
+              `I like the specific example you chose in "${snippet}"!`
+            ];
+            contentPraise = variedPraises[(stepIdx + words.length) % variedPraises.length];
+          }
+
+          // 3. If there was a spelling slip, combine the warm content praise with the exact spelling fix!
+          if (foundSlips.length > 0) {
+            const slipDesc = foundSlips.slice(0, 2).map(s => `"${s.wrong}" ➔ "${s.right}"`).join(' and ');
+            return {
+              badge: '🔧 Quick Fix',
+              badgeClass: 'inaccuracy',
+              praise: contentPraise,
+              hint: `Quick spelling check: try fixing ${slipDesc}.`
+            };
+          }
+
+          // 4. Check if sentence starts with a lowercase letter
+          if (/^[a-z]/.test(text.trim())) {
+            const firstW = words[0];
+            const capW = firstW.charAt(0).toUpperCase() + firstW.slice(1);
+            return {
+              badge: '🔧 Quick Fix',
+              badgeClass: 'inaccuracy',
+              praise: contentPraise,
+              hint: `Remember to start your sentence with a capital letter ("${firstW}" ➔ "${capW}").`
+            };
+          }
+
+          // 5. Check weak basic words
+          for (const [weak, upgrades] of Object.entries(WEAK_WORDS_MAP)) {
+            const regex = new RegExp(`\\b${weak}\\b`, 'i');
+            if (regex.test(text)) {
+              return {
+                badge: '⭐ Great!',
+                badgeClass: 'great',
+                praise: contentPraise,
+                hint: `Bonus tip: you can make "${weak}" even stronger by swapping it for "${upgrades[0]}" or "${upgrades[1]}".`
+              };
+            }
+          }
+
+          if (words.length >= 14) {
+            return {
+              badge: '💎 Brilliant!!',
+              badgeClass: 'brilliant',
+              praise: contentPraise,
+              hint: `Spot-on spelling and detail (${words.length} words)!`
+            };
+          }
+
+          return {
+            badge: '⭐ Great!',
+            badgeClass: 'great',
+            praise: contentPraise,
+            hint: `Add one more detail or reason to turn this into a 💎 Brilliant!! move.`
+          };
+        },
+
+        runGameReview() {
+          this.saveCurrentEditorToStep();
+          const fullDraft = this.getCompiledDraftText();
+          if (!fullDraft || fullDraft.split(/\s+/).length < 10) {
+            this.showToast('⚠️ Please write a few sentences first!');
+            return;
+          }
+
+          const rawSentences = fullDraft
+            .split(/(?<=[.!?])\s+|\n+/)
+            .map(s => s.trim())
+            .filter(s => s.length > 2);
+
+          let brilliantCount = 0;
+          let greatCount = 0;
+          let inaccuracyCount = 0;
+          const annotations = [];
+          const retryCandidates = [];
+
+          rawSentences.forEach((sent, sIdx) => {
+            const res = this.analyzeSentenceHeuristically(sent, sIdx);
+            if (res.badgeClass === 'brilliant') brilliantCount++;
+            else if (res.badgeClass === 'inaccuracy') {
+              inaccuracyCount++;
+              retryCandidates.push({
+                original: sent,
+                prompt: res.hint
+              });
+            } else {
+              greatCount++;
+            }
+            annotations.push({ sentence: sent, ...res });
+          });
+
+          document.getElementById('rev-brilliant-count').textContent = brilliantCount;
+          document.getElementById('rev-great-count').textContent = greatCount;
+          document.getElementById('rev-inaccuracy-count').textContent = inaccuracyCount;
+
+          document.getElementById('review-coach-summary').textContent =
+            `Awesome work finishing "${this.currentMission.title}", Ollie! You wrote ${fullDraft.split(/\s+/).length} words at ${this.currentWpm || 18} WPM. Here is how each sentence went:`;
+
+          const listEl = document.getElementById('sentence-review-list');
+          listEl.innerHTML = '';
+          annotations.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'sentence-item';
+            div.innerHTML = `
+              <span class="move-badge ${item.badgeClass}" style="margin-right:6px;">${item.badge}</span>
+              <strong>"${this.escapeHtml(item.sentence)}"</strong>
+              <div style="font-size:0.82rem;color:var(--text-secondary);margin-top:3px;">${this.escapeHtml(item.praise)} ${this.escapeHtml(item.hint)}</div>
+            `;
+            listEl.appendChild(div);
+          });
+
+          const retryInput = document.getElementById('retry-input');
+          const retryPromptEl = document.getElementById('retry-prompt-text');
+          if (retryCandidates.length > 0) {
+            const target = retryCandidates[0];
+            retryPromptEl.innerHTML = `<strong>Sentence to Polish:</strong> "${this.escapeHtml(target.original)}"<br/><strong>Coach Tip:</strong> ${this.escapeHtml(target.prompt)}`;
+            retryInput.value = target.original;
+          } else {
+            const firstSent = rawSentences[0] || '';
+            retryPromptEl.innerHTML = `Zero spelling slips! Add one extra descriptive word to this sentence for +10 💎:<br/><em>"${this.escapeHtml(firstSent)}"</em>`;
+            retryInput.value = firstSent;
+          }
+
+          document.getElementById('review-panel').classList.add('visible');
+          document.getElementById('review-panel').scrollIntoView({ behavior: 'smooth' });
+
+          this.recordSilentParentAnalytics(fullDraft, brilliantCount, greatCount, inaccuracyCount);
+        },
+
+        submitRetryChallenge() {
+          if (this.retryCompletedForMission) {
+            this.showToast('✅ Bonus already claimed for this level!');
+            return;
+          }
+          const val = document.getElementById('retry-input').value.trim();
+          if (val.split(/\s+/).length < 5) {
+            this.showToast('⚠️ Please type out the full sentence!');
+            return;
+          }
+          this.retryCompletedForMission = true;
+          this.awardEmeralds(10, '🏆 +10 Bonus Emeralds!');
+        },
+
+        advanceToNextLevel() {
+          if (this.currentMissionIndex < this.missions.length - 1) {
+            this.currentMissionIndex += 1;
+            safeSetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, String(this.currentMissionIndex));
+            document.getElementById('level-select').value = this.currentMissionIndex;
+            this.selectMission(this.missions[this.currentMissionIndex]);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.showToast(`🚀 ${this.missions[this.currentMissionIndex].title}`);
+          } else {
+            this.showToast(`🎉 All 9 levels completed!`);
+          }
+        },
+
+        recordSilentParentAnalytics(fullDraft, brilliantCount, greatCount, inaccuracyCount) {
+          const words = fullDraft.split(/\s+/).filter(Boolean).length;
+          const goal = this.currentMission.minWords || 45;
+
+          const contentScore = Math.min(9.5, Math.max(5.5, Number((6.5 + Math.min(2.0, (words / goal) * 1.5) + brilliantCount * 0.3).toFixed(1))));
+          const languageScore = Math.min(9.5, Math.max(5.5, Number((6.2 + brilliantCount * 0.5 + greatCount * 0.2 - inaccuracyCount * 0.2).toFixed(1))));
+          const spellingScore = Math.min(9.5, Math.max(5.5, Number((8.5 - inaccuracyCount * 0.5).toFixed(1))));
+          const total30 = Number((contentScore + languageScore + spellingScore).toFixed(1));
+          const band = total30 >= 24 ? 'ISA Level 5 (Advanced Upper Elementary)' :
+                       total30 >= 20 ? 'ISA Level 4 (Proficient Upper Elementary)' :
+                                       'ISA Level 3 (Developing Upper Elementary)';
+
+          const entry = {
+            timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
+            missionId: this.currentMission.levelId,
+            missionTitle: this.currentMission.title,
+            genre: this.currentMission.genre,
+            modeLabel: this.currentMission.genreBadge,
+            wordCount: words,
+            wpm: this.currentWpm || 22,
+            durationSec: Math.round(this.activeTypingSeconds || 120),
+            emeraldsEarned: this.currentMission.emeraldReward || 15,
+            brilliantCount,
+            greatCount,
+            inaccuracyCount,
+            retriesCompleted: this.retryCompletedForMission ? 1 : 0,
+            isaContent10: contentScore,
+            isaLanguage10: languageScore,
+            isaSpelling10: spellingScore,
+            isaTotal30: total30,
+            isaBand: band,
+            compiledDraft: fullDraft
+          };
+
+          const existing = JSON.parse(safeGetStorage(STORAGE_KEYS.PARENT_LOGS, '[]'));
+          existing.unshift(entry);
+          safeSetStorage(STORAGE_KEYS.PARENT_LOGS, JSON.stringify(existing.slice(0, 50)));
+
+          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          if (webAppUrl) {
+            fetch(webAppUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'log_session', ...entry })
+            }).catch(() => {});
+          }
+        },
+
+        /**
+         * Uses JSONP fallback on iPad Safari if POST redirect is blocked by WebKit!
+         */
+        async fetchLiveCoachTurn(studentText, stepObj, nextStepObj) {
+          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          if (!webAppUrl) return null;
+
+          const reqPayload = {
+            action: 'socratic_turn',
+            gcpProjectId: (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT),
+            gcpLocation: safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1'),
+            apiKey,
+            genre: this.currentMission.genre,
+            promptScenario: this.currentMission.promptScenario,
+            storySoFar: this.getStorySoFarUpTo(this.currentStepIndex + 1),
+            previousHistory: this.coachHistory,
+            stepGoal: stepObj.question,
+            studentText,
+            nextStepGoal: nextStepObj ? nextStepObj.question : '',
+            nextStepBaseHint: nextStepObj ? nextStepObj.hint : ''
+          };
+
+          try {
+            const resp = await fetch(webAppUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(reqPayload)
+            });
+            const data = await resp.json();
+            if (data && data.status === 'ok' && data.coachResponse) {
+              return data.coachResponse;
+            }
+          } catch (e) {
+            // Fallback to JSONP GET so iPad Safari 302 redirect never blocks the AI Coach!
+            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'socratic_turn', reqPayload);
+            if (jsonpRes && jsonpRes.status === 'ok' && jsonpRes.coachResponse) {
+              return jsonpRes.coachResponse;
+            }
+          }
+          return null;
+        },
+
+        async fetchLiveContextualHint(studentText, currentQuestion) {
+          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          if (!webAppUrl) return null;
+
+          const reqPayload = {
+            action: 'contextual_hint',
+            gcpProjectId: (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT),
+            gcpLocation: safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1'),
+            apiKey,
+            promptScenario: this.currentMission.promptScenario,
+            storySoFar: this.getStorySoFarUpTo(this.currentStepIndex),
+            previousHistory: this.coachHistory,
+            stepGoal: currentQuestion,
+            studentText
+          };
+
+          try {
+            const resp = await fetch(webAppUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(reqPayload)
+            });
+            const data = await resp.json();
+            if (data && data.status === 'ok' && data.hintResponse) {
+              return data.hintResponse;
+            }
+          } catch (e) {
+            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'contextual_hint', reqPayload);
+            if (jsonpRes && jsonpRes.status === 'ok' && jsonpRes.hintResponse) {
+              return jsonpRes.hintResponse;
+            }
+          }
+          return null;
+        },
+
+        callActionViaJsonp(webAppUrl, actionName, payloadObj) {
+          return new Promise((resolve) => {
+            const cbName = '__ollieActCb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            const sep = webAppUrl.includes('?') ? '&' : '?';
+            const script = document.createElement('script');
+            const timer = setTimeout(() => {
+              if (window[cbName]) delete window[cbName];
+              script.remove();
+              resolve(null);
+            }, 6500);
+            window[cbName] = (res) => {
+              clearTimeout(timer);
+              delete window[cbName];
+              script.remove();
+              resolve(res);
+            };
+            script.onerror = () => {
+              clearTimeout(timer);
+              delete window[cbName];
+              script.remove();
+              resolve(null);
+            };
+            script.src = `${webAppUrl}${sep}action=${encodeURIComponent(actionName)}&payload=${encodeURIComponent(JSON.stringify(payloadObj))}&callback=${cbName}&t=${Date.now()}`;
+            document.body.appendChild(script);
+          });
+        },
+
+        syncCloudMissions(manual = false) {
+          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL).trim();
+          if (!webAppUrl) {
+            if (manual) this.showToast('⚠️ Tap ☁️ first to paste your Apps Script Web App URL!');
+            return;
+          }
+          if (manual) this.showToast('🔄 Syncing latest questions from Google Drive...');
+          const sep = webAppUrl.includes('?') ? '&' : '?';
+          const url = `${webAppUrl}${sep}child=ollie&t=${Date.now()}`;
+
+          fetch(url, { redirect: 'follow' })
+            .then(r => r.json())
+            .then(res => {
+              if (res && res.status === 'ok' && res.data && res.data.missions) {
+                this.data = res.data;
+                this.loadMissions(res.data.missions);
+                this.showToast('☁️ Loaded latest questions from Google Drive!');
+              } else {
+                this.syncViaJsonp(webAppUrl, manual);
+              }
+            })
+            .catch(() => {
+              // Resilient JSONP fallback for iPad/iPhone Safari cross-origin redirects
+              this.syncViaJsonp(webAppUrl, manual);
+            });
+        },
+
+        syncViaJsonp(webAppUrl, manual) {
+          const cbName = '__ollieJsonpCb_' + Date.now();
+          const sep = webAppUrl.includes('?') ? '&' : '?';
+          const script = document.createElement('script');
+          window[cbName] = (res) => {
+            delete window[cbName];
+            script.remove();
+            if (res && res.status === 'ok' && res.data && res.data.missions) {
+              this.data = res.data;
+              this.loadMissions(res.data.missions);
+              this.showToast('☁️ Loaded latest questions from Google Drive!');
+            } else if (manual) {
+              this.showToast('⚠️ Connected to script, but no questions file found.');
+            }
+          };
+          script.onerror = () => {
+            delete window[cbName];
+            script.remove();
+            if (manual) this.showToast('⚠️ Could not reach Web App URL. Check ☁️ settings.');
+          };
+          script.src = `${webAppUrl}${sep}child=ollie&callback=${cbName}&t=${Date.now()}`;
+          document.body.appendChild(script);
+        },
+
+        setCoachFeedback(badgeText, badgeClass, message, hint) {
+          const badgeEl = document.getElementById('coach-move-badge');
+          badgeEl.className = `move-badge ${badgeClass}`;
+          badgeEl.textContent = badgeText;
+          document.getElementById('coach-message').textContent = message;
+
+          const hintEl = document.getElementById('coach-hint');
+          if (hint && hint.trim().length > 0) {
+            hintEl.textContent = `💡 ${hint}`;
+            hintEl.classList.add('visible');
+          } else {
+            hintEl.textContent = '';
+            hintEl.classList.remove('visible');
+          }
+        },
+
+        awardEmeralds(amount, reasonText) {
+          this.emeralds += amount;
+          safeSetStorage(STORAGE_KEYS.EMERALDS, String(this.emeralds));
+          this.updateEmeraldHud();
+          if (reasonText) this.showToast(reasonText);
+        },
+
+        updateEmeraldHud() {
+          document.getElementById('hud-emeralds').textContent = this.emeralds;
+        },
+
+        speakCoachPrompt() {
+          const msg = document.getElementById('coach-message').textContent;
+          this.speakText(msg);
+        },
+
+        speakCompiledDraft() {
+          const txt = this.getCompiledDraftText();
+          if (!txt) {
+            this.showToast('Write a sentence first so I can read it aloud!');
+            return;
+          }
+          this.speakText(txt);
+        },
+
+        speakText(text) {
+          if (!('speechSynthesis' in window)) return;
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'en-GB';
+          utter.rate = 0.96;
+          window.speechSynthesis.speak(utter);
+        },
+
+        openSettingsModal() {
+          document.getElementById('input-webapp-url').value = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          document.getElementById('input-gcp-project').value = (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT);
+          document.getElementById('input-gcp-location').value = safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1');
+          document.getElementById('input-gemini-key').value = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          this.renderParentLogsTable();
+          document.getElementById('settings-modal').classList.add('open');
+        },
+
+        closeSettingsModal() {
+          document.getElementById('settings-modal').classList.remove('open');
+        },
+
+        saveCloudSettings() {
+          const url = document.getElementById('input-webapp-url').value.trim();
+          const proj = document.getElementById('input-gcp-project').value.trim();
+          const loc = document.getElementById('input-gcp-location').value.trim() || 'us-central1';
+          const key = document.getElementById('input-gemini-key').value.trim();
+          safeSetStorage(STORAGE_KEYS.WEBAPP_URL, url);
+          safeSetStorage(STORAGE_KEYS.GCP_PROJECT, proj);
+          safeSetStorage(STORAGE_KEYS.GCP_LOCATION, loc);
+          safeSetStorage(STORAGE_KEYS.GEMINI_KEY, key);
+
+          if (url) {
+            fetch(url, {
+              method: 'POST',
+              mode: 'no-cors',
+              body: JSON.stringify({ action: 'save_cloud_config', gcpProjectId: proj, gcpLocation: loc, apiKey: key })
+            }).catch(() => {});
+          }
+          this.showToast('☁️ Cloud Settings Saved!');
+          this.syncCloudMissions();
+          this.closeSettingsModal();
+        },
+
+        renderParentLogsTable() {
+          const tbody = document.getElementById('parent-log-tbody');
+          const logs = JSON.parse(safeGetStorage(STORAGE_KEYS.PARENT_LOGS, '[]'));
+          if (logs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="color:var(--text-muted);text-align:center;">No completed sessions recorded on this device yet.</td></tr>`;
+            return;
+          }
+          tbody.innerHTML = logs.map(l => `
+            <tr>
+              <td>${l.timestamp}</td>
+              <td>${this.escapeHtml(l.missionTitle)}</td>
+              <td>${l.wordCount}w / ${l.wpm} WPM</td>
+              <td>${l.isaContent10}</td>
+              <td>${l.isaLanguage10}</td>
+              <td>${l.isaSpelling10}</td>
+              <td><strong>${l.isaTotal30} / 30</strong></td>
+              <td>${l.isaBand}</td>
+            </tr>
+          `).join('');
+        },
+
+        resetAllProgress() {
+          safeSetStorage(STORAGE_KEYS.EMERALDS, '20');
+          safeSetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, '0');
+          safeSetStorage(STORAGE_KEYS.PARENT_LOGS, '[]');
+          safeSetStorage(STORAGE_KEYS.WARMUP_DONE, '{}');
+          this.emeralds = 20;
+          this.updateEmeraldHud();
+          this.currentMissionIndex = 0;
+          document.getElementById('level-select').value = 0;
+          if (this.missions[0]) this.selectMission(this.missions[0]);
+          this.renderParentLogsTable();
+          const webAppUrl = (safeGetStorage(STORAGE_KEYS.WEBAPP_URL, '') || DEFAULT_WEBAPP_URL);
+          if (webAppUrl) {
+            fetch(webAppUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              body: JSON.stringify({ action: 'clear_records' })
+            }).catch(() => {});
+          }
+          this.showToast('✨ Progress and logs cleared! Ready for a fresh start at Level 1.');
+          this.closeSettingsModal();
+        },
+
+        exportParentCsv() {
+          const logs = JSON.parse(safeGetStorage(STORAGE_KEYS.PARENT_LOGS, '[]'));
+          const headers = ['Timestamp','Level_ID','Title','Genre','Word_Count','WPM','Content_10','Language_10','Spelling_10','ISA_Total_30','ISA_Band','Compiled_Draft'];
+          const rows = logs.map(l => [
+            l.timestamp, l.missionId, `"${(l.missionTitle||'').replace(/"/g,'""')}"`, l.genre,
+            l.wordCount, l.wpm, l.isaContent10, l.isaLanguage10, l.isaSpelling10, l.isaTotal30,
+            `"${l.isaBand}"`, `"${(l.compiledDraft||'').replace(/"/g,'""')}"`
+          ].join(','));
+          const csv = [headers.join(','), ...rows].join('\n');
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'Ollie_ISA_Writing_Report.csv';
+          a.click();
+        },
+
+        showToast(msg) {
+          const el = document.getElementById('toast-box');
+          el.textContent = msg;
+          el.classList.add('show');
+          clearTimeout(this._toastTimer);
+          this._toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+        },
+
+        escapeHtml(str) {
+          return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+        }
+      };
+
+      window.GameEngine = GameEngine;
+      document.addEventListener('DOMContentLoaded', () => GameEngine.init());
+    })();
+  </script>
+</body>
+</html>
