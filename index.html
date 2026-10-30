@@ -1053,11 +1053,14 @@
         </div>
       </div>
 
-      <div class="button-bar" style="margin-bottom:14px;">
+      <div class="button-bar" style="margin-bottom:12px;flex-wrap:wrap;gap:8px;">
         <button class="btn-primary" onclick="window.GameEngine.saveCloudSettings()">💾 Save Cloud Settings</button>
+        <button class="btn-light" onclick="window.GameEngine.syncCloudMissions(true)">🔄 Sync Questions from Drive</button>
+        <button class="btn-light" id="btn-gen-new-level" onclick="window.GameEngine.generateNewCloudLevel()">✨ Generate New Level (Vertex AI)</button>
         <button class="btn-light" onclick="window.GameEngine.exportParentCsv()">📥 Download Report (CSV)</button>
         <button class="btn-light" onclick="window.GameEngine.resetAllProgress()">🗑️ Reset Progress & Logs</button>
       </div>
+      <div id="modal-cloud-status" style="display:none;padding:10px 14px;border-radius:10px;font-size:0.9rem;font-weight:600;margin-bottom:14px;border:1px solid #cbd5e1;background:#f8fafc;color:#1e293b;line-height:1.45;"></div>
 
       <strong style="font-size:0.9rem;display:block;margin-bottom:4px;">
         🔒 Parent-Only ISA Rubric Scores (Hidden from Ollie's Screen)
@@ -1088,7 +1091,7 @@
     window.DEFAULT_BANKS = {
   "gameTitle": "Ollie's Writing Crafter",
   "version": "1.2.0",
-  "lastUpdated": "2026-10-23",
+  "lastUpdated": "2026-10-30",
   "child": "ollie",
   "folderId": "1otBnXAjMshBLG48yFe2oV3IcCTJGEEFA",
   "missions": [
@@ -1370,6 +1373,99 @@
           "minStepWords": 22
         }
       ]
+    },
+    {
+      "levelId": "L10",
+      "order": 10,
+      "date": "2026-10-30",
+      "title": "Level 10: Designing the Ultimate Class Reward Day",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Challenge (2 Parts)",
+      "mode": "workshop",
+      "minWords": 48,
+      "emeraldReward": 35,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Your class has worked hard all term, and your teacher is letting everyone vote on a special reward afternoon! Write a 2-part piece sharing which reward activity you would pick and why.",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on the best class reward day — Part 1: Which reward activity you vote for; Part 2: The fun games you and your classmates would play together!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Your Top Reward Choice",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on the best class reward day — Part 1: Which reward activity you vote for; Part 2: The fun games you and your classmates would play together!\n\n👉 Part 1 of 2: If your class could vote for a special reward afternoon (like an arcade trip, a park games day, or a party), which one would you choose and why?",
+          "hint": "🗺️ Overall Passage Idea: Part 1 states the reward activity you vote for; Part 2 describes what makes it fun for the whole class! 👉 For Part 1: Name your top choice clearly.",
+          "minStepWords": 22
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: Fun with Classmates",
+          "coachQuestion": "👉 Part 2 of 2: What specific games or activities would you play with your friends during this reward afternoon, and why would everyone love it?",
+          "hint": "Give a fun example of what you and your friends would do together!",
+          "minStepWords": 22
+        }
+      ]
+    },
+    {
+      "levelId": "L11",
+      "order": 11,
+      "date": "2026-10-30",
+      "title": "Level 11: The Great Outdoor Treasure Chase",
+      "genre": "Narrative/Reflective",
+      "genreBadge": "📖 Story Time • Challenge (2 Parts)",
+      "mode": "boss",
+      "minWords": 50,
+      "emeraldReward": 40,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Write a 2-part story about playing an exciting outdoor chase or treasure game with Milo, your dad, or your friends!",
+      "passageOverview": "🗺️ Whole Story Plan: Today we will write a 2-part story about an outdoor treasure chase — Part 1: Who was playing and how the game worked; Part 2: Sneaking up, racing back, and celebrating your points!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Starting the Treasure Game",
+          "coachQuestion": "🗺️ Whole Story Plan: Today we will write a 2-part story about an outdoor treasure chase — Part 1: Who was playing and how the game worked; Part 2: Sneaking up, racing back, and celebrating your points!\n\n👉 Part 1 of 2: Where did you play the outdoor chase or treasure game, who played with you, and what was the treasure?",
+          "hint": "🗺️ Overall Story Idea: Part 1 sets up the game and players; Part 2 shows the exciting chase and how it ended! 👉 For Part 1: Mention Milo, Dad, or your friends and the rules of the game.",
+          "minStepWords": 24
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: The Exciting Chase & Reward",
+          "coachQuestion": "👉 Part 2 of 2: What happened when you had to sneak up or run fast without getting caught, and how did you celebrate at the end?",
+          "hint": "Describe the fastest, funniest moment of the chase and how many points or treats you won!",
+          "minStepWords": 24
+        }
+      ]
+    },
+    {
+      "levelId": "L12",
+      "order": 12,
+      "date": "2026-10-30",
+      "title": "Level 12: What Makes a Great Teammate?",
+      "genre": "Exposition/Argument",
+      "genreBadge": "🗣️ Share Your Opinion • Challenge (2 Parts)",
+      "mode": "boss",
+      "minWords": 50,
+      "emeraldReward": 40,
+      "coachName": "Coach Alex",
+      "coachAvatar": "🦉",
+      "promptScenario": "Whether you are running a relay race, playing sports, or playing a board game with Milo, being a good teammate matters. Write a 2-part piece sharing what makes someone a great teammate.",
+      "passageOverview": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on what makes a great teammate — Part 1: How a good teammate helps and cheers for others; Part 2: A real example from a race or game!",
+      "steps": [
+        {
+          "stepIndex": 1,
+          "role": "Part 1 of 2: Helping & Cheering for Your Team",
+          "coachQuestion": "🗺️ Whole Passage Plan: Today we will write a 2-part opinion piece on what makes a great teammate — Part 1: How a good teammate helps and cheers for others; Part 2: A real example from a race or game!\n\n👉 Part 1 of 2: In your opinion, what are the most important things a good teammate says or does during a game or race?",
+          "hint": "🗺️ Overall Passage Idea: Part 1 explains how good teammates act; Part 2 gives a real example from sports or games! 👉 For Part 1: Think about cheering, sharing, and encouraging friends.",
+          "minStepWords": 24
+        },
+        {
+          "stepIndex": 2,
+          "role": "Part 2 of 2: A Real Teamwork Moment",
+          "coachQuestion": "👉 Part 2 of 2: Tell about a time when you, Milo, or a friend showed great teamwork in a race or game, and how it felt!",
+          "hint": "Share a specific moment when working together made the game much more fun!",
+          "minStepWords": 24
+        }
+      ]
     }
   ]
 };
@@ -1416,6 +1512,17 @@
       }
 
       const COMMON_MISSPELLINGS = {
+        'brekfast': 'breakfast',
+        'tresure': 'treasure',
+        'queitly': 'quietly',
+        'eqaul': 'equal',
+        'betweeen': 'between',
+        'acrade': 'arcade',
+        'cuboards': 'cupboards',
+        'ruhed': 'rushed',
+        'suprising': 'surprising',
+        'craked': 'cracked',
+        'hungary': 'hungry',
         'restruant': 'restaurant',
         'restaraunt': 'restaurant',
         'resturant': 'restaurant',
@@ -1527,6 +1634,8 @@
         isValidOllieTwoPartBank(bankData) {
           if (!bankData || !Array.isArray(bankData.missions) || bankData.missions.length === 0) return false;
           if (bankData.child && String(bankData.child).toLowerCase() !== 'ollie') return false;
+          const firstSteps = bankData.missions[0] && bankData.missions[0].steps;
+          if (Array.isArray(firstSteps) && firstSteps.length > 2) return false;
           return true;
         },
 
@@ -1571,7 +1680,8 @@
           this.syncCloudMissions();
         },
 
-        loadMissions(rawMissions) {
+        loadMissions(rawMissions, keepCurrentSelection = false) {
+          const prevLevelId = (keepCurrentSelection && this.currentMission) ? this.currentMission.levelId : null;
           this.missions = [...rawMissions].sort((a, b) => {
             const ordA = a.order || parseInt((a.levelId || '0').replace(/\D/g, ''), 10) || 1;
             const ordB = b.order || parseInt((b.levelId || '0').replace(/\D/g, ''), 10) || 1;
@@ -1587,11 +1697,17 @@
             selectEl.appendChild(opt);
           });
 
-          const savedIdx = parseInt(safeGetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, '0'), 10);
-          const startIdx = (savedIdx >= 0 && savedIdx < this.missions.length) ? savedIdx : 0;
+          let startIdx = 0;
+          if (prevLevelId) {
+            const foundIdx = this.missions.findIndex(m => m.levelId === prevLevelId);
+            if (foundIdx !== -1) startIdx = foundIdx;
+          } else {
+            const savedIdx = parseInt(safeGetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, '0'), 10);
+            startIdx = (savedIdx >= 0 && savedIdx < this.missions.length) ? savedIdx : 0;
+          }
           this.currentMissionIndex = startIdx;
           selectEl.value = startIdx;
-          if (this.missions[startIdx]) {
+          if (!keepCurrentSelection && this.missions[startIdx]) {
             this.selectMission(this.missions[startIdx]);
           }
         },
@@ -2577,12 +2693,87 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
             this.showToast(`🚀 ${this.missions[this.currentMissionIndex].title}`);
           } else {
-            this.showToast(`🎉 All 9 levels completed!`);
+            this.showToast(`🎉 All ${this.missions.length} levels completed! Tap ☁️ to generate a brand-new level with Vertex AI!`);
           }
         },
 
-        recordSilentParentAnalytics(fullDraft, brilliantCount, greatCount, inaccuracyCount) {
-          const words = fullDraft.split(/\s+/).filter(Boolean).length;
+        getActiveWebAppUrl() {
+          const inputEl = document.getElementById('input-webapp-url');
+          const fromInput = inputEl && inputEl.value ? inputEl.value.trim() : '';
+          const saved = (fromInput || this.getOllieWebAppUrl() || FALLBACK_STATELESS_AI_URL).trim();
+          return saved;
+        },
+
+        getCloudProjectId() {
+          const inputEl = document.getElementById('input-gcp-project');
+          const fromInput = inputEl && inputEl.value ? inputEl.value.trim() : '';
+          return (fromInput || safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT || 'milo-writing-crafter').trim();
+        },
+
+        getCloudLocation() {
+          const inputEl = document.getElementById('input-gcp-location');
+          const fromInput = inputEl && inputEl.value ? inputEl.value.trim() : '';
+          return (fromInput || safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1') || 'us-central1').trim();
+        },
+
+        getCloudApiKey() {
+          const inputEl = document.getElementById('input-gemini-key');
+          const fromInput = inputEl && inputEl.value ? inputEl.value.trim() : '';
+          return (fromInput || safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '')).trim();
+        },
+
+        setModalStatus(msg, type = 'info') {
+          const el = document.getElementById('modal-cloud-status');
+          if (!el) return;
+          if (!msg) {
+            el.style.display = 'none';
+            el.textContent = '';
+            return;
+          }
+          el.style.display = 'block';
+          el.textContent = msg;
+          if (type === 'success') {
+            el.style.background = '#ecfdf5';
+            el.style.borderColor = '#34d399';
+            el.style.color = '#065f46';
+          } else if (type === 'warn') {
+            el.style.background = '#fffbeb';
+            el.style.borderColor = '#fbbf24';
+            el.style.color = '#92400e';
+          } else if (type === 'error') {
+            el.style.background = '#fef2f2';
+            el.style.borderColor = '#f87171';
+            el.style.color = '#991b1b';
+          } else {
+            el.style.background = '#eff6ff';
+            el.style.borderColor = '#93c5fd';
+            el.style.color = '#1e3a8a';
+          }
+        },
+
+        mergeNewMissionIntoBank(newMission, selectIt = false) {
+          if (!newMission || !newMission.title) return false;
+          const existsIdx = this.missions.findIndex(m => m.levelId === newMission.levelId || m.title === newMission.title);
+          if (existsIdx !== -1) {
+            this.missions[existsIdx] = newMission;
+          } else {
+            this.missions.push(newMission);
+          }
+          this.loadMissions(this.missions, !selectIt);
+          if (selectIt) {
+            const targetIdx = this.missions.findIndex(m => m.levelId === newMission.levelId || m.title === newMission.title);
+            if (targetIdx !== -1) {
+              this.currentMissionIndex = targetIdx;
+              safeSetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, String(targetIdx));
+              document.getElementById('level-select').value = targetIdx;
+              this.selectMission(this.missions[targetIdx]);
+            }
+          }
+          return true;
+        },
+
+        async recordSilentParentAnalytics(fullDraft, brilliantCount, greatCount, inaccuracyCount) {
+          const words = this.countRealWords ? this.countRealWords(fullDraft) : fullDraft.split(/\s+/).filter(Boolean).length;
           const goal = this.currentMission.minWords || 45;
 
           const contentScore = Math.min(9.5, Math.max(5.5, Number((6.5 + Math.min(2.0, (words / goal) * 1.5) + brilliantCount * 0.3).toFixed(1))));
@@ -2594,9 +2785,11 @@
                                        'ISA Level 3 (Developing Upper Elementary)';
 
           const entry = {
+            child: 'ollie',
             timestamp: new Date().toISOString().slice(0, 16).replace('T', ' '),
             missionId: this.currentMission.levelId,
             missionTitle: this.currentMission.title,
+            promptScenario: this.currentMission.promptScenario || '',
             genre: this.currentMission.genre,
             modeLabel: this.currentMission.genreBadge,
             wordCount: words,
@@ -2612,21 +2805,76 @@
             isaSpelling10: spellingScore,
             isaTotal30: total30,
             isaBand: band,
-            compiledDraft: fullDraft
+            compiledDraft: fullDraft,
+            coachNotes: '',
+            gcpProjectId: this.getCloudProjectId(),
+            gcpLocation: this.getCloudLocation(),
+            apiKey: this.getCloudApiKey()
           };
 
           const existing = JSON.parse(safeGetStorage(STORAGE_KEYS.PARENT_LOGS, '[]'));
           existing.unshift(entry);
           safeSetStorage(STORAGE_KEYS.PARENT_LOGS, JSON.stringify(existing.slice(0, 50)));
 
-          const webAppUrl = this.getOllieWebAppUrl();
-          if (webAppUrl) {
-            fetch(webAppUrl, {
+          const webAppUrl = this.getActiveWebAppUrl();
+          if (!webAppUrl) return;
+
+          const reqPayload = {
+            action: 'game_review',
+            ...entry
+          };
+
+          let cloudRes = null;
+          try {
+            const resp = await fetch(webAppUrl, {
               method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ action: 'log_session', ...entry })
-            }).catch(() => {});
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(reqPayload)
+            });
+            cloudRes = await resp.json();
+          } catch (e) {
+            cloudRes = await this.callActionViaJsonp(webAppUrl, 'game_review', reqPayload, 20000);
+          }
+
+          if (!cloudRes || cloudRes.status !== 'ok') {
+            // Fallback to log_session via JSONP if old script doesn't support game_review on GET
+            cloudRes = await this.callActionViaJsonp(webAppUrl, 'log_session', { action: 'log_session', ...entry }, 20000);
+            if (!cloudRes) {
+              fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'log_session', ...entry })
+              }).catch(() => {});
+            }
+          }
+
+          if (cloudRes && cloudRes.status === 'ok') {
+            if (cloudRes.review) {
+              const rev = cloudRes.review;
+              const summaryTxt = rev.coachSummary || rev.coachSummaryForMilo || rev.coachSummaryForOllie;
+              if (summaryTxt) {
+                const sumEl = document.getElementById('review-coach-summary');
+                if (sumEl) sumEl.textContent = summaryTxt;
+              }
+              if (rev.parentHiddenScores) {
+                const s = rev.parentHiddenScores;
+                const logsNow = JSON.parse(safeGetStorage(STORAGE_KEYS.PARENT_LOGS, '[]'));
+                if (logsNow.length > 0 && logsNow[0].missionId === entry.missionId) {
+                  logsNow[0].isaContent10 = s.content10 ?? logsNow[0].isaContent10;
+                  logsNow[0].isaLanguage10 = s.language10 ?? logsNow[0].isaLanguage10;
+                  logsNow[0].isaSpelling10 = s.spelling10 ?? logsNow[0].isaSpelling10;
+                  logsNow[0].isaTotal30 = s.total30 ?? logsNow[0].isaTotal30;
+                  logsNow[0].isaBand = s.isaBand || logsNow[0].isaBand;
+                  logsNow[0].coachNotes = s.parentNotes || '';
+                  safeSetStorage(STORAGE_KEYS.PARENT_LOGS, JSON.stringify(logsNow));
+                }
+              }
+            }
+            if (cloudRes.autoGeneratedLevel && cloudRes.autoGeneratedLevel.title) {
+              this.mergeNewMissionIntoBank(cloudRes.autoGeneratedLevel, false);
+              this.showToast(`✨ Vertex AI unlocked a new level: ${cloudRes.autoGeneratedLevel.title}!`);
+            }
           }
         },
 
@@ -2634,15 +2882,15 @@
          * Uses JSONP fallback on iPad Safari if POST redirect is blocked by WebKit!
          */
         async fetchLiveCoachTurn(studentText, stepObj, nextStepObj) {
-          const webAppUrl = this.getOllieWebAppUrl() || FALLBACK_STATELESS_AI_URL;
-          const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          const webAppUrl = this.getActiveWebAppUrl();
           if (!webAppUrl) return null;
 
           const reqPayload = {
             action: 'socratic_turn',
-            gcpProjectId: (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT),
-            gcpLocation: safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1'),
-            apiKey,
+            child: 'ollie',
+            gcpProjectId: this.getCloudProjectId(),
+            gcpLocation: this.getCloudLocation(),
+            apiKey: this.getCloudApiKey(),
             genre: this.currentMission.genre,
             promptScenario: this.currentMission.promptScenario,
             storySoFar: this.getStorySoFarUpTo(this.currentStepIndex + 1),
@@ -2664,8 +2912,7 @@
               return data.coachResponse;
             }
           } catch (e) {
-            // Fallback to JSONP GET so iPad Safari 302 redirect never blocks the AI Coach!
-            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'socratic_turn', reqPayload);
+            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'socratic_turn', reqPayload, 12000);
             if (jsonpRes && jsonpRes.status === 'ok' && jsonpRes.coachResponse) {
               return jsonpRes.coachResponse;
             }
@@ -2674,15 +2921,15 @@
         },
 
         async fetchLiveContextualHint(studentText, currentQuestion) {
-          const webAppUrl = this.getOllieWebAppUrl() || FALLBACK_STATELESS_AI_URL;
-          const apiKey = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          const webAppUrl = this.getActiveWebAppUrl();
           if (!webAppUrl) return null;
 
           const reqPayload = {
             action: 'contextual_hint',
-            gcpProjectId: (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT),
-            gcpLocation: safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1'),
-            apiKey,
+            child: 'ollie',
+            gcpProjectId: this.getCloudProjectId(),
+            gcpLocation: this.getCloudLocation(),
+            apiKey: this.getCloudApiKey(),
             promptScenario: this.currentMission.promptScenario,
             storySoFar: this.getStorySoFarUpTo(this.currentStepIndex),
             previousHistory: this.coachHistory,
@@ -2701,7 +2948,7 @@
               return data.hintResponse;
             }
           } catch (e) {
-            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'contextual_hint', reqPayload);
+            const jsonpRes = await this.callActionViaJsonp(webAppUrl, 'contextual_hint', reqPayload, 12000);
             if (jsonpRes && jsonpRes.status === 'ok' && jsonpRes.hintResponse) {
               return jsonpRes.hintResponse;
             }
@@ -2709,16 +2956,16 @@
           return null;
         },
 
-        callActionViaJsonp(webAppUrl, actionName, payloadObj) {
+        callActionViaJsonp(webAppUrl, actionName, payloadObj, timeoutMs = 10000) {
           return new Promise((resolve) => {
-            const cbName = '__ollieActCb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            const cbName = '__' + 'ollie' + 'ActCb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
             const sep = webAppUrl.includes('?') ? '&' : '?';
             const script = document.createElement('script');
             const timer = setTimeout(() => {
               if (window[cbName]) delete window[cbName];
               script.remove();
               resolve(null);
-            }, 6500);
+            }, timeoutMs);
             window[cbName] = (res) => {
               clearTimeout(timer);
               delete window[cbName];
@@ -2731,67 +2978,168 @@
               script.remove();
               resolve(null);
             };
-            script.src = `${webAppUrl}${sep}action=${encodeURIComponent(actionName)}&payload=${encodeURIComponent(JSON.stringify(payloadObj))}&callback=${cbName}&t=${Date.now()}`;
+            script.src = `${webAppUrl}${sep}action=${encodeURIComponent(actionName)}&child=ollie&payload=${encodeURIComponent(JSON.stringify(payloadObj))}&callback=${cbName}&t=${Date.now()}`;
             document.body.appendChild(script);
           });
         },
 
-        syncCloudMissions(manual = false) {
-          const webAppUrl = this.getOllieWebAppUrl();
+        async generateNewCloudLevel() {
+          const webAppUrl = this.getActiveWebAppUrl();
+          const proj = this.getCloudProjectId();
+          const loc = this.getCloudLocation();
+          const key = this.getCloudApiKey();
+
           if (!webAppUrl) {
-            if (manual) this.showToast('ℹ️ Using built-in 2-part levels! Paste Ollie\'s Web App URL in ☁️ to sync custom Drive levels.');
+            this.setModalStatus('⚠️ Please paste your Google Apps Script Web App URL above first.', 'warn');
+            this.showToast('⚠️ Paste your Web App URL first!');
             return;
           }
-          if (manual) this.showToast('🔄 Syncing Ollie\'s 2-part questions from Google Drive...');
+
+          // Save current inputs before calling Vertex AI
+          safeSetStorage(STORAGE_KEYS.WEBAPP_URL, webAppUrl);
+          safeSetStorage(STORAGE_KEYS.GCP_PROJECT, proj);
+          safeSetStorage(STORAGE_KEYS.GCP_LOCATION, loc);
+          safeSetStorage(STORAGE_KEYS.GEMINI_KEY, key);
+
+          const btn = document.getElementById('btn-gen-new-level');
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = '⏳ Generating Level...';
+          }
+          this.setModalStatus(`⏳ Connecting to Vertex AI (Project: ${proj}, Region: ${loc}) to generate a brand-new level for Ollie... (takes ~5–10 seconds)`, 'info');
+          this.showToast('⏳ Generating new level via Vertex AI...');
+
+          const lastMission = this.missions[this.missions.length - 1] || this.currentMission || {};
+          const reqPayload = {
+            action: 'generate_new_level',
+            child: 'ollie',
+            gcpProjectId: proj,
+            gcpLocation: loc,
+            apiKey: key,
+            missionId: lastMission.levelId || ('L' + this.missions.length),
+            missionTitle: lastMission.title || '',
+            compiledDraft: this.getCompiledDraftText() || 'Completed earlier levels with great energy!'
+          };
+
+          let res = null;
+          try {
+            const resp = await fetch(webAppUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(reqPayload)
+            });
+            res = await resp.json();
+          } catch (err) {
+            res = await this.callActionViaJsonp(webAppUrl, 'generate_new_level', reqPayload, 25000);
+          }
+
+          if (!res || (res.status !== 'ok' && !res.error)) {
+            res = await this.callActionViaJsonp(webAppUrl, 'generate_new_level', reqPayload, 25000);
+          }
+
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = '✨ Generate New Level (Vertex AI)';
+          }
+
+          if (res && res.status === 'ok' && res.newLevel && res.newLevel.title) {
+            this.mergeNewMissionIntoBank(res.newLevel, true);
+            this.setModalStatus(`✅ Vertex AI generated "${res.newLevel.title}" (${res.newLevel.levelId}) and saved it to Google Drive! It is now selected at the top of the app.`, 'success');
+            this.showToast(`✨ Added ${res.newLevel.title}!`);
+          } else {
+            const errDetail = (res && res.error) ? res.error : 'No response from generate_new_level (make sure you pasted the updated .gs script in script.google.com and deployed a New Version!).';
+            this.setModalStatus(`⚠️ Could not generate a new level yet: ${errDetail}`, 'error');
+            this.showToast('⚠️ Could not generate new level. Check status message in ☁️ modal.');
+          }
+        },
+
+        syncCloudMissions(manual = false) {
+          const webAppUrl = this.getActiveWebAppUrl();
+          if (!webAppUrl) {
+            if (manual) {
+              this.setModalStatus('⚠️ Please paste your Apps Script Web App URL above first.', 'warn');
+              this.showToast('⚠️ Tap ☁️ first to paste your Apps Script Web App URL!');
+            }
+            return;
+          }
+          if (manual) {
+            this.setModalStatus('🔄 Syncing latest questions from Google Drive via Apps Script...', 'info');
+            this.showToast('🔄 Syncing latest questions from Google Drive...');
+          }
           const sep = webAppUrl.includes('?') ? '&' : '?';
-          const url = `${webAppUrl}${sep}child=ollie&t=${Date.now()}`;
+          const url = `${webAppUrl}${sep}action=get_questions&child=ollie&t=${Date.now()}`;
 
           fetch(url, { redirect: 'follow' })
             .then(r => r.json())
             .then(res => {
-              if (res && res.status === 'ok' && res.data && res.data.missions) {
-                if (!this.isValidOllieTwoPartBank(res.data)) {
-                  if (manual) this.showToast('⚠️ That Web App URL belongs to Milo\'s 4-part game! Keeping Ollie\'s 2-part levels.');
+              if (res && res.status === 'ok' && res.data && Array.isArray(res.data.missions)) {
+                if ('ollie' === 'ollie' && this.isValidOllieTwoPartBank && !this.isValidOllieTwoPartBank(res.data)) {
+                  if (manual) {
+                    this.setModalStatus('ℹ️ Connected to Milo\'s 4-part script (not yet updated with multi-child v1.5). Using Ollie\'s built-in 12 two-part levels! Update the .gs script in script.google.com to sync Ollie\'s Drive bank.', 'warn');
+                    this.showToast('ℹ️ Using Ollie\'s built-in 12 two-part levels!');
+                  }
                   return;
                 }
+                const merged = this.mergeCloudAndLocalMissions(res.data.missions);
                 this.data = res.data;
-                this.loadMissions(res.data.missions);
-                this.showToast('☁️ Loaded Ollie\'s 2-part questions from Google Drive!');
+                this.loadMissions(merged, true);
+                if (manual) {
+                  this.setModalStatus(`✅ Apps Script & Drive Connected! Synced ${merged.length} levels for Ollie.`, 'success');
+                }
+                this.showToast(`☁️ Synced ${merged.length} levels from Google Drive!`);
               } else {
                 this.syncViaJsonp(webAppUrl, manual);
               }
             })
             .catch(() => {
-              // Resilient JSONP fallback for iPad/iPhone Safari cross-origin redirects
               this.syncViaJsonp(webAppUrl, manual);
             });
         },
 
+        mergeCloudAndLocalMissions(cloudMissions) {
+          const byId = new Map();
+          (window.DEFAULT_BANKS && window.DEFAULT_BANKS.missions || []).forEach(m => byId.set(m.levelId, m));
+          (this.missions || []).forEach(m => byId.set(m.levelId, m));
+          (cloudMissions || []).forEach(m => byId.set(m.levelId, m));
+          return Array.from(byId.values());
+        },
+
         syncViaJsonp(webAppUrl, manual) {
-          const cbName = '__ollieJsonpCb_' + Date.now();
+          const cbName = '__' + 'ollie' + 'JsonpCb_' + Date.now();
           const sep = webAppUrl.includes('?') ? '&' : '?';
           const script = document.createElement('script');
           window[cbName] = (res) => {
             delete window[cbName];
             script.remove();
-            if (res && res.status === 'ok' && res.data && res.data.missions) {
-              if (!this.isValidOllieTwoPartBank(res.data)) {
-                if (manual) this.showToast('⚠️ That Web App URL belongs to Milo\'s 4-part game! Keeping Ollie\'s 2-part levels.');
+            if (res && res.status === 'ok' && res.data && Array.isArray(res.data.missions)) {
+              if ('ollie' === 'ollie' && this.isValidOllieTwoPartBank && !this.isValidOllieTwoPartBank(res.data)) {
+                if (manual) {
+                  this.setModalStatus('ℹ️ Connected to Milo\'s 4-part script (not yet updated with multi-child v1.5). Using Ollie\'s built-in 12 two-part levels! Update the .gs script in script.google.com to sync Ollie\'s Drive bank.', 'warn');
+                  this.showToast('ℹ️ Using Ollie\'s built-in 12 two-part levels!');
+                }
                 return;
               }
+              const merged = this.mergeCloudAndLocalMissions(res.data.missions);
               this.data = res.data;
-              this.loadMissions(res.data.missions);
-              this.showToast('☁️ Loaded Ollie\'s 2-part questions from Google Drive!');
+              this.loadMissions(merged, true);
+              if (manual) {
+                this.setModalStatus(`✅ Apps Script & Drive Connected! Synced ${merged.length} levels for Ollie.`, 'success');
+              }
+              this.showToast(`☁️ Synced ${merged.length} levels from Google Drive!`);
             } else if (manual) {
+              this.setModalStatus('⚠️ Connected to Apps Script, but no questions file was returned.', 'warn');
               this.showToast('⚠️ Connected to script, but no questions file found.');
             }
           };
           script.onerror = () => {
             delete window[cbName];
             script.remove();
-            if (manual) this.showToast('⚠️ Could not reach Web App URL. Check ☁️ settings.');
+            if (manual) {
+              this.setModalStatus('❌ Could not reach the Apps Script Web App URL. Please check that the URL ends with /exec and is deployed with "Who has access: Anyone".', 'error');
+              this.showToast('⚠️ Could not reach Web App URL. Check ☁️ settings.');
+            }
           };
-          script.src = `${webAppUrl}${sep}child=ollie&callback=${cbName}&t=${Date.now()}`;
+          script.src = `${webAppUrl}${sep}action=get_questions&child=ollie&callback=${cbName}&t=${Date.now()}`;
           document.body.appendChild(script);
         },
 
@@ -2846,10 +3194,11 @@
         },
 
         openSettingsModal() {
-          document.getElementById('input-webapp-url').value = this.getOllieWebAppUrl();
-          document.getElementById('input-gcp-project').value = (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT);
+          document.getElementById('input-webapp-url').value = this.getActiveWebAppUrl();
+          document.getElementById('input-gcp-project').value = (safeGetStorage(STORAGE_KEYS.GCP_PROJECT, '') || DEFAULT_GCP_PROJECT || 'milo-writing-crafter');
           document.getElementById('input-gcp-location').value = safeGetStorage(STORAGE_KEYS.GCP_LOCATION, 'us-central1');
           document.getElementById('input-gemini-key').value = safeGetStorage(STORAGE_KEYS.GEMINI_KEY, '');
+          this.setModalStatus('', 'info');
           this.renderParentLogsTable();
           document.getElementById('settings-modal').classList.add('open');
         },
@@ -2858,14 +3207,9 @@
           document.getElementById('settings-modal').classList.remove('open');
         },
 
-        saveCloudSettings() {
-          const rawUrl = document.getElementById('input-webapp-url').value.trim();
-          if (rawUrl.includes(MILO_FOUR_PART_WEBAPP_ID)) {
-            this.showToast('⚠️ That URL is Milo\'s 4-part backend! Please paste Ollie\'s Web App URL instead.');
-            return;
-          }
-          const url = rawUrl;
-          const proj = document.getElementById('input-gcp-project').value.trim();
+        async saveCloudSettings() {
+          const url = document.getElementById('input-webapp-url').value.trim();
+          const proj = document.getElementById('input-gcp-project').value.trim() || DEFAULT_GCP_PROJECT || 'milo-writing-crafter';
           const loc = document.getElementById('input-gcp-location').value.trim() || 'us-central1';
           const key = document.getElementById('input-gemini-key').value.trim();
           safeSetStorage(STORAGE_KEYS.WEBAPP_URL, url);
@@ -2873,16 +3217,22 @@
           safeSetStorage(STORAGE_KEYS.GCP_LOCATION, loc);
           safeSetStorage(STORAGE_KEYS.GEMINI_KEY, key);
 
+          this.setModalStatus(`💾 Saving Vertex AI settings (Project: ${proj}, Region: ${loc}) and syncing with Google Drive...`, 'info');
+          this.showToast('☁️ Saving Cloud Settings...');
+
           if (url) {
-            fetch(url, {
-              method: 'POST',
-              mode: 'no-cors',
-              body: JSON.stringify({ action: 'save_cloud_config', gcpProjectId: proj, gcpLocation: loc, apiKey: key })
-            }).catch(() => {});
+            const cfgPayload = { action: 'save_cloud_config', child: 'ollie', gcpProjectId: proj, gcpLocation: loc, apiKey: key };
+            try {
+              await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(cfgPayload)
+              });
+            } catch (e) {
+              await this.callActionViaJsonp(url, 'save_cloud_config', cfgPayload, 8000);
+            }
           }
-          this.showToast('☁️ Cloud Settings Saved!');
-          this.syncCloudMissions();
-          this.closeSettingsModal();
+          this.syncCloudMissions(true);
         },
 
         renderParentLogsTable() {
@@ -2911,19 +3261,16 @@
           safeSetStorage(STORAGE_KEYS.CURRENT_LEVEL_IDX, '0');
           safeSetStorage(STORAGE_KEYS.PARENT_LOGS, '[]');
           safeSetStorage(STORAGE_KEYS.WARMUP_DONE, '{}');
+          if (STORAGE_KEYS.STEP_DRAFTS) safeSetStorage(STORAGE_KEYS.STEP_DRAFTS, '{}');
           this.emeralds = 20;
           this.updateEmeraldHud();
           this.currentMissionIndex = 0;
           document.getElementById('level-select').value = 0;
           if (this.missions[0]) this.selectMission(this.missions[0]);
           this.renderParentLogsTable();
-          const webAppUrl = this.getOllieWebAppUrl();
+          const webAppUrl = this.getActiveWebAppUrl();
           if (webAppUrl) {
-            fetch(webAppUrl, {
-              method: 'POST',
-              mode: 'no-cors',
-              body: JSON.stringify({ action: 'clear_records' })
-            }).catch(() => {});
+            this.callActionViaJsonp(webAppUrl, 'clear_records', { action: 'clear_records', child: 'ollie' }, 8000);
           }
           this.showToast('✨ Progress and logs cleared! Ready for a fresh start at Level 1.');
           this.closeSettingsModal();
